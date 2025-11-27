@@ -1,0 +1,36 @@
+<?php
+// database/seeders/ProductSeeder.php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use DB;
+
+class ProductSeeder extends Seeder
+{
+    public function run(): void
+    {
+        DB::table('products')->insert([
+            [
+                'name' => 'Proyektor Epson X200',
+                'category_id' => 1,
+                'qr_code' => 'QR-001',
+                'photo_url' => '/images/products/proyektor.jpg',
+                'status' => 'available',
+                'description' => 'Proyektor untuk presentasi.',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Laptop ThinkPad L14',
+                'category_id' => 1,
+                'qr_code' => 'QR-002',
+                'photo_url' => '/images/products/laptop.jpg',
+                'status' => 'available',
+                'description' => 'Laptop kantor.',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+    }
+}

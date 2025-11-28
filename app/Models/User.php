@@ -18,6 +18,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'region_id',
         'name',
         'email',
         'password',
@@ -45,4 +46,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
 }

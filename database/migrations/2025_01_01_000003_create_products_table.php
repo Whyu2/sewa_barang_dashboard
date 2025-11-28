@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('region_id')->constrained('regions')->onDelete('cascade');
             $table->string('qr_code')->nullable();
             $table->string('photo_url')->nullable();
             $table->string('status')->default('available'); // available, rented, broken

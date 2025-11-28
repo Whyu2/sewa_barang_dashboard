@@ -38,6 +38,12 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    // A product belongs to one region
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
     // A product has many rent transactions
     public function rentTransactions()
     {

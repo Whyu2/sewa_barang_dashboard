@@ -13,6 +13,7 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             [
                 'name' => 'Proyektor Epson X200',
+                'region_id' => 1,
                 'category_id' => 1,
                 'qr_code' => 'QR-001',
                 'photo_url' => '/images/products/proyektor.jpg',
@@ -23,6 +24,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Laptop ThinkPad L14',
+                'region_id' => 1,
                 'category_id' => 1,
                 'qr_code' => 'QR-002',
                 'photo_url' => '/images/products/laptop.jpg',

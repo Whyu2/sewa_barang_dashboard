@@ -8,18 +8,31 @@
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.1.17",
-        "axios": "^1.11.0",
-        "concurrently": "^9.0.1",
-        "laravel-vite-plugin": "^2.0.0",
-        "tailwindcss": "^4.0.0",
-        "vite": "^7.0.7"
+        "@inertiajs/inertia-vue3": "^0.6.0",
+        "@tanstack/vue-query-devtools": "^5.83.0",
+        "@vitejs/plugin-vue": "^6.0.0",
+        "axios": "^1.1.2",
+        "laravel-vite-plugin": "^1.3.0",
+        "prettier": "^3.6.2",
+        "vite": "^6.3.5"
     },
     "dependencies": {
-        "@inertiajs/vue3": "^2.2.18",
-        "@primeuix/themes": "^2.0.1",
-        "@vitejs/plugin-vue": "^6.0.2",
+        "@inertiajs/inertia": "^0.11.1",
+        "@inertiajs/vue3": "^2.0.14",
+        "@primeuix/themes": "^1.2.1",
+        "@tanstack/vue-query": "^5.82.0",
+        "@vueuse/core": "^13.5.0",
+        "chart.js": "^4.5.0",
+        "chartjs-plugin-annotation": "^3.1.0",
+        "crypto-js": "^4.2.0",
+        "lodash": "^4.17.21",
+        "pinia": "^3.0.3",
         "primeicons": "^7.0.0",
-        "primevue": "^4.4.1",
-        "vue-router": "^4.6.3"
+        "primevue": "^4.3.6",
+        "vee-validate": "^4.15.1",
+        "vue": "^3.5.17",
+        "vue-chartjs": "^5.3.2",
+        "vue-i18n": "^11.1.11",
+        "yup": "^1.6.1"
     }
 }

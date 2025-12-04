@@ -16,7 +16,7 @@ class ProductController extends BaseController
 
     public function index(): \Illuminate\Http\JsonResponse
     {
-        return $this->success($this->service->getPaginatedProducts(10));
+        return $this->success($this->service->getAll());
     }
 
     public function store(Request $request)

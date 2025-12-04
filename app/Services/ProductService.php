@@ -31,4 +31,9 @@ class ProductService
     {
         return $this->repo->paginate( $limit);
     }
+
+    public function getAll()
+    {
+        return $this->repo->all();
+    }
 }

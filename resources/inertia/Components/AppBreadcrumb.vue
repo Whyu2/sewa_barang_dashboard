@@ -1,7 +1,6 @@
 <script setup>
 import Breadcrumb from 'primevue/breadcrumb'
 import { Link } from '@inertiajs/vue3'
-import { useBreadcrumb } from '@/inertia/Composables/useBreadcrumb.js'
 import useAppBreadcrumbStore from "@/inertia/Stores/useAppBreadcrumbStore.js";
 import {storeToRefs} from "pinia";
 

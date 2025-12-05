@@ -2,7 +2,8 @@
     import { ref } from "vue";
     import AppBreadcrumb from "@/inertia/Components/AppBreadcrumb.vue";
     import LoaderOverlay from "@/inertia/Components/LoaderOverlay.vue";
-    import { Link } from '@inertiajs/vue3'
+    import { Link } from '@inertiajs/vue3';
+    import DynamicDialog from 'primevue/dynamicdialog';
 
     const props = defineProps({
         useBreadcrumb: { type: Boolean, required: false, default: false },
@@ -43,13 +44,9 @@
             route: '/log'
         },
     ]);
-
-
-
     </script>
-
-
     <template>
+        <DynamicDialog />
         <LoaderOverlay />
             <div class="card">
                 <Menubar :model="items">

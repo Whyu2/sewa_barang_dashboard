@@ -14,6 +14,7 @@ import './Assets/main.css';
 import { createPinia } from 'pinia';
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query';
 import router from './Routers/index.js'
+import DialogService from 'primevue/dialogservice';
 
 // global config for tanstack query
 const queryClient = new QueryClient({
@@ -36,6 +37,7 @@ createInertiaApp({
         app.use(plugin);
         app.use(pinia);
         app.use(router);
+        app.use(DialogService);
         app.use(VueQueryPlugin, {
             queryClient,
         })

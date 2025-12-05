@@ -9,4 +9,24 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     {
         $this->model = $model;
     }
+
+    public function all()
+    {
+        return Product::with(['category', 'region'])->get();
+    }
+
+    public function paginate($limit = 10)
+    {
+        return Product::with(['category', 'region'])->paginate($limit);
+    }
+
+    public function find($id)
+    {
+        return Product::with(['category', 'region'])->find($id);
+    }
+
+    public function create(array $data)
+    {
+        return Product::create($data);
+    }
 }

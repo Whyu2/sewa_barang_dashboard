@@ -9,7 +9,12 @@ class DashboardController
 {
     public function index(): Response
     {
-        $pageTitle = "Parameters List";
-        return Inertia::render('Dashboard/Pages/IndexPage', compact('pageTitle'));
+
+        return Inertia::render('Home/Pages/IndexPage');
+    }
+
+    public function masterProduct(): Response
+    {
+        return Inertia::render('MastersProducts/Pages/IndexPage');
     }
 }

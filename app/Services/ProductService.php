@@ -27,7 +27,7 @@ class ProductService
         return $this->repo->all();
     }
 
-    public function getPaginatedProducts( $limit)
+    public function getPaginatedProducts($limit)
     {
         return $this->repo->paginate( $limit);
     }

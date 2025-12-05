@@ -1,9 +1,9 @@
 import { useQuery as useQueryTanstack, useQueryClient } from '@tanstack/vue-query';
 
 import { computed } from 'vue';
-import {fetchProducts} from "@/inertia/Modules/Dashboard/Services/dashboardService.js";
+import {fetchProducts} from "@/inertia/Modules/Home/Services/homeService.js";
 
-const dashboardUseQuery = () => {
+const homeUseQuery = () => {
   const useFetchProducts = () =>
     useQueryTanstack({
       queryKey: ['fetchProducts'],
@@ -15,4 +15,4 @@ const dashboardUseQuery = () => {
   };
 };
 
-export default dashboardUseQuery;
+export default homeUseQuery;

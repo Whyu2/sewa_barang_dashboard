@@ -13,6 +13,7 @@ import {Menubar} from "primevue";
 import './Assets/main.css';
 import { createPinia } from 'pinia';
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query';
+import router from './Routers/index.js'
 
 // global config for tanstack query
 const queryClient = new QueryClient({
@@ -34,6 +35,7 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) });
         app.use(plugin);
         app.use(pinia);
+        app.use(router);
         app.use(VueQueryPlugin, {
             queryClient,
         })

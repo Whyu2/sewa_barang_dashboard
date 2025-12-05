@@ -14,9 +14,14 @@ class ProductController extends BaseController
     {
     }
 
-    public function index(): \Illuminate\Http\JsonResponse
+    public function products(): \Illuminate\Http\JsonResponse
     {
         return $this->success($this->service->getAll());
+    }
+
+    public function productPaginated(Request $request): \Illuminate\Http\JsonResponse
+    {
+        return $this->success($this->service->getPaginatedProducts($request->limit));
     }
 
     public function store(Request $request)

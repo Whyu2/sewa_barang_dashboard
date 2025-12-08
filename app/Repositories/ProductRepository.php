@@ -12,21 +12,21 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
 
     public function all()
     {
-        return Product::with(['category', 'region'])->get();
+        return $this->model->with(['category', 'region'])->get();
     }
 
     public function paginate($limit = 10)
     {
-        return Product::with(['category', 'region'])->paginate($limit);
+        return $this->model->with(['category', 'region'])->paginate($limit);
     }
 
     public function find($id)
     {
-        return Product::with(['category', 'region'])->find($id);
+        return $this->model->with(['category', 'region'])->find($id);
     }
 
     public function create(array $data)
     {
-        return Product::create($data);
+        return $this->model->create($data);
     }
 }

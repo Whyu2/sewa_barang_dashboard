@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import {fetchProducts} from "@/inertia/Modules/Home/Services/homeService.js";
 import {fetchProductPaginated} from "@/inertia/Modules/MastersProducts/Services/masterProductService.js";
 
-const masterProductUseQuery = () => {
+const useQuery = () => {
   const useFetchProductPaginated = () =>
     useQueryTanstack({
       queryKey: ['fetchProductPaginated'],
@@ -16,4 +16,4 @@ const masterProductUseQuery = () => {
   };
 };
 
-export default masterProductUseQuery;
+export default useQuery;

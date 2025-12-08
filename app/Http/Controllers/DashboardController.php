@@ -17,4 +17,9 @@ class DashboardController
     {
         return Inertia::render('MastersProducts/Pages/IndexPage');
     }
+
+    public function masterCategory(): Response
+    {
+        return Inertia::render('MastersCategories/Pages/IndexPage');
+    }
 }

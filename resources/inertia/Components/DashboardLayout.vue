@@ -4,6 +4,8 @@
     import LoaderOverlay from "@/inertia/Components/LoaderOverlay.vue";
     import { Link } from '@inertiajs/vue3';
     import DynamicDialog from 'primevue/dynamicdialog';
+    import Toast from 'primevue/toast';
+    import ConfirmDialog from 'primevue/confirmdialog';
 
     const props = defineProps({
         useBreadcrumb: { type: Boolean, required: false, default: false },
@@ -46,9 +48,12 @@
     ]);
     </script>
     <template>
+        <Toast />
         <DynamicDialog />
         <LoaderOverlay />
-            <div class="card">
+        <ConfirmDialog />
+
+        <div class="card">
                 <Menubar :model="items">
                     <template #item="{ item, props, hasSubmenu, root }">
                         <Link
@@ -71,8 +76,11 @@
                     </template>
                 </Menubar>
             </div>
-            <div class="p-5 ">
+
                 <AppBreadcrumb v-if="props.useBreadcrumb"/>
+
+            <div class="pl-4 pr-4">
+
                 <slot />
             </div>
 

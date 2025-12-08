@@ -12,20 +12,16 @@ import Avatar from 'primevue/avatar';
 import {Menubar} from "primevue";
 import './Assets/main.css';
 import { createPinia } from 'pinia';
-import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query';
+import {  VueQueryPlugin } from '@tanstack/vue-query';
 import router from './Routers/index.js'
 import DialogService from 'primevue/dialogservice';
+import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast';
+import InputText from 'primevue/inputtext';
+import Message from 'primevue/message';
+import { queryClient,  registerApp} from './Composables/QueryClient.js';
+import ConfirmationService from 'primevue/confirmationservice';
 
-// global config for tanstack query
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            retry: false,
-            refetchOnWindowFocus: false,
-            staleTime: 5 * 60 * 1000, // 5 Minutes
-        },
-    },
-});
 
 
 createInertiaApp({
@@ -38,6 +34,9 @@ createInertiaApp({
         app.use(pinia);
         app.use(router);
         app.use(DialogService);
+        app.use(ToastService);
+        app.use(ConfirmationService);
+        registerApp(app);
         app.use(VueQueryPlugin, {
             queryClient,
         })
@@ -51,6 +50,10 @@ createInertiaApp({
                 },
             },
         });
+
+        app.component('InputText', InputText);
+        app.component('Toast', Toast);
+        app.component('Message', Message);
         app.component('Drawer', Drawer);
         app.component('Button', Button);
         app.component('Avatar', Avatar);
@@ -59,6 +62,8 @@ createInertiaApp({
         // 🔥 REGISTER DIRECTIVES
         app.directive('ripple', Ripple);
         app.directive('styleclass', StyleClass);
+
+
 
         app.mount(el);
     },

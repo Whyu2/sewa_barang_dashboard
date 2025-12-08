@@ -4,30 +4,47 @@ import { useToast } from 'primevue/usetoast';
 import { Form } from '@primevue/forms';
 import { yupResolver } from '@primevue/forms/resolvers/yup';
 import * as yup from "yup";
+import useMutation from "@/inertia/Modules/MastersCategories/Composables/UseMutation.js";
+import useInvalidateQuery from "@/inertia/Modules/MastersCategories/Composables/UseInvalidateQuery.js";
 const toast = useToast();
 const dialogRef = inject('dialogRef');
-const emit = defineEmits(['submit']);
+
+const {useCreateCategory} = useMutation()
+const {useInvalidateFetchCategoryPaginated} = useInvalidateQuery();
+const {mutate: createCategoryMutation} = useCreateCategory({
+        onSuccess:async () => {
+            await useInvalidateFetchCategoryPaginated();
+            toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+            dialogRef.value.close();
+        }
+    }
+)
+
 const initialValues = ref({
     name: '',
-    category: '',
-    region: '',
+    description: '',
 });
 
 const resolver = yupResolver(
     yup.object({
         name: yup.string().required(),
-        category: yup.string().required(),
+        description: yup.string().required(),
     })
 );
 
-const onFormSubmit = ({ valid }) => {
+const onFormSubmit = ({ valid, values }) => {
     if (!valid) {
-        toast.add({ severity: 'error', summary: 'Form tidak valid', life: 2500 });
         return;
     }
-
-    emit('submit', 'xx'); // ✅ valid, kirim ke BaseDialog
+    const payload = {
+        name: values.name,
+        description: values.description,
+    }
+    createCategoryMutation({payload})
 };
+
+
+
 </script>
 
 <template>
@@ -47,19 +64,21 @@ const onFormSubmit = ({ valid }) => {
             </div>
 
             <div class="mb-2">
-                <label for="category">Category</label>
-                <InputText name="category" placeholder="Category"     class="w-full" />
+                <label for="description">Description</label>
+                <InputText name="description" placeholder="Description" class="w-full" />
                 <Message
-                    v-if="$form.category?.invalid"
+                    v-if="$form.description?.invalid"
                     severity="error"
                     variant="simple"
                     size="small"
                 >
-                    {{ $form.category.error?.message }}
+                    {{ $form.description.error?.message }}
                 </Message>
             </div>
+            <div class="flex justify-end">
+                <Button type="submit" label="Submit" icon="pi pi-send" class="mt-4" />
+            </div>
 
-            <Button type="submit" label="Submit" icon="pi pi-send" class="mt-4" />
 
         </Form>
     </div>

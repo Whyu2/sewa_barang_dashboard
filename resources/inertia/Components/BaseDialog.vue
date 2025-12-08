@@ -17,10 +17,13 @@ const handleUpdate = args => {
   emits('update', args);
 };
 
-const onSubmit = args => {
-  emits('submit', args);
-  dialogRef.value?.close?.({ action: 'submit' });
-};
+function onSubmit(data) {
+    emits('submit', data);
+    dialogRef.value.close({
+        action: 'submit',
+        data,
+    });
+}
 const onCancel = args => {
   emits('cancel', args);
   dialogRef.value?.close?.({ action: 'cancel' });

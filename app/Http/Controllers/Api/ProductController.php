@@ -16,7 +16,7 @@ class ProductController extends BaseController
 
     public function products(): \Illuminate\Http\JsonResponse
     {
-        return $this->success($this->service->getAll());
+        return $this->success($this->service->getAllProducts());
     }
 
     public function productPaginated(Request $request): \Illuminate\Http\JsonResponse
@@ -24,7 +24,7 @@ class ProductController extends BaseController
         return $this->success($this->service->getPaginatedProducts($request->limit));
     }
 
-    public function store(Request $request)
+    public function productStore(Request $request)
     {
         try {
             $product = $this->service->createProduct($request->all());

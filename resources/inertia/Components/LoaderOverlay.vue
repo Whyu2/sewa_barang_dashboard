@@ -2,12 +2,13 @@
 
 <script setup>
 import ProgressSpinner from 'primevue/progressspinner'
-import { useIsFetching } from '@tanstack/vue-query'
+import { useIsFetching, useIsMutating } from '@tanstack/vue-query'
 const isFetching = useIsFetching()
+const isMutating = useIsMutating()
 </script>
 
 <template>
-    <div v-if="isFetching > 0" class="overlay-loader">
+    <div v-if="isFetching > 0 || isMutating > 0" class="overlay-loader">
         <ProgressSpinner style="width:50px;height:50px" />
     </div>
 </template>

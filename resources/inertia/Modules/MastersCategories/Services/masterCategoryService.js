@@ -1,0 +1,23 @@
+import useAxios from '@/inertia/Libs/useAxios';
+
+export const fetchCategoryPaginated = () => {
+    const params = {
+        limit: 999,
+    }
+  return useAxios()
+    .get('/category-paginated', {params})
+    .then(res => res.data.data);
+};
+
+export const createCategory = payload => {
+    return useAxios()
+        .post('/category', payload)
+        .then(res => res.data.data);
+};
+
+export const deleteCategory = id => {
+    console.log(id);
+    return useAxios()
+        .delete(`/category/${id}`)
+        .then(res => res.data.data);
+};

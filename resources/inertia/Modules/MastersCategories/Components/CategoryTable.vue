@@ -23,16 +23,29 @@ const {useFetchProductPaginated} = useQuery();
 const { data:  category } = useFetchProductPaginated();
 const { openBaseDialog } = baseDialog();
 const {baseConfirmDialog} = confirmDialog();
-const handleOpenDialog = () => {
+const handleOpenDialogAdd = () => {
     openBaseDialog(
         {
             titleHeader: 'Add New Category',
         component: CategoryForm,
         width: `50vw`,
         componentProps: {
-            product: null,
+            isUpdate: false,
         },
     });
+}
+
+const handleOpenDialogUpdate = (category) => {
+    openBaseDialog(
+        {
+            titleHeader: 'Update Category',
+            component: CategoryForm,
+            width: `50vw`,
+            componentProps: {
+                category: category,
+                isUpdate: true,
+            },
+        });
 }
 const confirmDelete = (id) => {
     baseConfirmDialog({
@@ -50,15 +63,14 @@ const confirmDelete = (id) => {
 <template>
     <div class="card">
         <div class="flex justify-end mb-4 ">
-         <Button label="Add New" @click="handleOpenDialog" icon="pi pi-plus"/>
+         <Button label="Add New" @click="handleOpenDialogAdd" icon="pi pi-plus"/>
         </div>
         <DataTable v-if="category" :value="category.data" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 50rem" show-gridlines>
             <Column field="name" header="Name" style="width: 25%"></Column>
             <Column field="description" header="Description" style="width: 25%"></Column>
-            <Column field="action" header="Action" style="width: 25%">
+            <Column field="action" header="Action" style="width: 5%">
                 <template #body="slotProps">
-                    <Button icon="pi pi-eye" rounded text size="small" @click="handleOpenDialog"/>
-                    <Button icon="pi pi-pencil" rounded text size="small" />
+                    <Button icon="pi pi-pencil" rounded text size="small" @click="handleOpenDialogUpdate(slotProps.data)"/>
                     <Button icon="pi pi-trash" rounded text size="small" @click="confirmDelete(slotProps.data.id)" />
                 </template>
             </Column>

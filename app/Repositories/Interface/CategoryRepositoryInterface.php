@@ -8,4 +8,5 @@ interface CategoryRepositoryInterface
     public function create(array $data);
     public function paginate($limit = 10);
     public function destroy($id);
+    public function update(array $data ,$id);
 }

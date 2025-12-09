@@ -19,10 +19,6 @@ const handleUpdate = args => {
 
 function onSubmit(data) {
     emits('submit', data);
-    dialogRef.value.close({
-        action: 'submit',
-        data,
-    });
 }
 const onCancel = args => {
   emits('cancel', args);

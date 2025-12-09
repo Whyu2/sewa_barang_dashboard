@@ -1,5 +1,9 @@
 import { useMutation as useMutationTanstack } from '@tanstack/vue-query';
-import {createCategory, deleteCategory} from "@/inertia/Modules/MastersCategories/Services/masterCategoryService.js";
+import {
+    createCategory,
+    deleteCategory,
+    updateCategory
+} from "@/inertia/Modules/MastersCategories/Services/masterCategoryService.js";
 
 const useMutation = () => {
   const useCreateCategory = ({ onSuccess, onError }) =>
@@ -17,9 +21,18 @@ const useMutation = () => {
             onError: error => onError(error),
             onSuccess: data => onSuccess(data),
         });
+
+    const useUpdateCategory = ({ onSuccess, onError }) =>
+        useMutationTanstack({
+            mutationKey: ['updateCategory'],
+            mutationFn: ({ id, payload }) => updateCategory( id, payload),
+            onError: error => onError(error),
+            onSuccess: data => onSuccess(data),
+        });
   return {
     useCreateCategory,
-      useDeleteCategory
+      useDeleteCategory,
+      useUpdateCategory
   };
 };
 export default useMutation;

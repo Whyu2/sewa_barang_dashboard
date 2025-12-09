@@ -1,17 +1,37 @@
 <script setup>
-import {inject, ref} from 'vue';
+import {inject, ref, onMounted, watch} from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { Form } from '@primevue/forms';
 import { yupResolver } from '@primevue/forms/resolvers/yup';
 import * as yup from "yup";
 import useMutation from "@/inertia/Modules/MastersCategories/Composables/UseMutation.js";
 import useInvalidateQuery from "@/inertia/Modules/MastersCategories/Composables/UseInvalidateQuery.js";
+
+const props = defineProps({
+    isUpdate: {
+        type: Boolean,
+        default: false,
+    },
+    category: {
+        type: Object,
+        default: null,
+    },
+})
 const toast = useToast();
 const dialogRef = inject('dialogRef');
 
-const {useCreateCategory} = useMutation()
+const {useCreateCategory, useUpdateCategory} = useMutation()
 const {useInvalidateFetchCategoryPaginated} = useInvalidateQuery();
 const {mutate: createCategoryMutation} = useCreateCategory({
+        onSuccess:async () => {
+            await useInvalidateFetchCategoryPaginated();
+            toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+            dialogRef.value.close();
+        }
+    }
+)
+
+const {mutate: updateCategoryMutation} = useUpdateCategory({
         onSuccess:async () => {
             await useInvalidateFetchCategoryPaginated();
             toast.add({ severity: 'success', summary: 'Success', life: 2500 });
@@ -36,15 +56,32 @@ const onFormSubmit = ({ valid, values }) => {
     if (!valid) {
         return;
     }
+    const id = props?.category?.id;
     const payload = {
         name: values.name,
         description: values.description,
     }
-    createCategoryMutation({payload})
+    if(id) {
+        updateCategoryMutation( {id:id, payload})
+    } else {
+        createCategoryMutation({payload})
+    }
+
 };
 
 
-
+watch(
+    () => props.category,
+    newValue => {
+        if (!newValue) {
+            return;
+        }
+        initialValues.value = newValue;
+    },
+    {
+        immediate: true,
+    }
+);
 </script>
 
 <template>
@@ -69,17 +106,15 @@ const onFormSubmit = ({ valid, values }) => {
                 <Message
                     v-if="$form.description?.invalid"
                     severity="error"
-                    variant="simple"
                     size="small"
+                    variant="simple"
                 >
                     {{ $form.description.error?.message }}
                 </Message>
             </div>
             <div class="flex justify-end">
-                <Button type="submit" label="Submit" icon="pi pi-send" class="mt-4" />
+                <Button type="submit" :label="`${props?.isUpdate ? 'Update' : 'Submit' }`" icon="pi pi-send" class="mt-4" />
             </div>
-
-
         </Form>
     </div>
 </template>

@@ -16,8 +16,14 @@ export const createCategory = payload => {
 };
 
 export const deleteCategory = id => {
-    console.log(id);
     return useAxios()
         .delete(`/category/${id}`)
+        .then(res => res.data.data);
+};
+
+
+export const updateCategory = ( id, payload ) => {
+    return useAxios()
+        .put(`/category/${id}`, payload)
         .then(res => res.data.data);
 };

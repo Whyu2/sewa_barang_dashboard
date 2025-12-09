@@ -38,4 +38,9 @@ class CategoryController extends BaseController
     {
         return $this->service->destroyCategory($id);
     }
+
+    public function categoryUpdate(Request $request, $id)
+    {
+        return $this->service->updateCategory($request->all() , $id);
+    }
 }

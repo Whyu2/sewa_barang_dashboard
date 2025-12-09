@@ -38,4 +38,9 @@ class CategoryService
         return $this->repo->destroy($id);
     }
 
+    public function updateCategory(array $data ,$id)
+    {
+        return $this->repo->update($data, $id);
+    }
+
 }

@@ -11,4 +11,5 @@ Route::post('/products', [ProductController::class, 'productStore']);
 Route::get('/category', [CategoryController::class, 'categories']);
 Route::get('/category-paginated', [CategoryController::class, 'categoryPaginated']);
 Route::post('/category', [CategoryController::class, 'categoryStore']);
+Route::put('/category/{id}', [CategoryController::class, 'categoryUpdate']);
 Route::delete('/category/{id}', [CategoryController::class, 'categoryDestroy']);

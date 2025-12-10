@@ -10,31 +10,4 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
         $this->model = $model;
     }
 
-    public function all()
-    {
-        return  $this->model->get();
-    }
-
-    public function paginate($limit = 10)
-    {
-        return $this->model->orderBy('id', 'ASC')->paginate($limit);
-    }
-
-    public function find($id)
-    {
-        return $this->model->find($id);
-    }
-
-    public function destroy($id)
-    {
-        return $this->model->where('id', $id)->delete();
-    }
-
-    public function update($data, $id)
-    {
-        return $this->model->where('id', $id)->update([
-            'name' => $data['name'],
-            'description' => $data['description'],
-        ]);
-    }
 }

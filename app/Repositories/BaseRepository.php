@@ -16,7 +16,7 @@ abstract class BaseRepository
 
     public function paginate($limit = 10)
     {
-        return $this->model->paginate($limit);
+        return $this->model->orderBy('id', 'ASC')->paginate($limit);
     }
 
     public function find($id)
@@ -29,13 +29,13 @@ abstract class BaseRepository
         return $this->model->create($data);
     }
 
-    public function update(Model $model, array $data)
+    public function update($data, $id)
     {
-        return $model->update($data);
+        return $this->model->where('id', $id)->update($data);
     }
 
-    public function delete(Model $model)
+    public function destroy($id)
     {
-        return $model->delete();
+        return $this->model->where('id', $id)->update();
     }
 }

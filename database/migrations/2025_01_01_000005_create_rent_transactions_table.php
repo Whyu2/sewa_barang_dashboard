@@ -10,9 +10,11 @@ return new class extends Migration {
         Schema::create('rent_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('region_id')->constrained('regions')->onDelete('cascade');
             $table->string('renter_name');
             $table->string('renter_phone')->nullable();
             $table->dateTime('rent_date');
+            $table->integer('qty');
             $table->dateTime('expected_return_date');
             $table->dateTime('return_date')->nullable();
             $table->string('status')->default('rented');

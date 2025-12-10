@@ -1,33 +1,103 @@
 <script setup>
-import {inject, ref} from 'vue';
+import {inject, ref, onMounted, watch} from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { Form } from '@primevue/forms';
 import { yupResolver } from '@primevue/forms/resolvers/yup';
 import * as yup from "yup";
+import useMutation from "@/inertia/Modules/MastersProducts/Composables/UseMutation.js";
+import useInvalidateQuery from "@/inertia/Modules/MastersProducts/Composables/UseInvalidateQuery.js";
+import useQuery from "@/inertia/Modules/MastersProducts/Composables/UseQuery.js";
+
+const props = defineProps({
+    isUpdate: {
+        type: Boolean,
+        default: false,
+    },
+    product: {
+        type: Object,
+        default: null,
+    },
+})
 const toast = useToast();
 const dialogRef = inject('dialogRef');
-const emit = defineEmits(['submit']);
+const { useFetchCategories} = useQuery();
+const { data:  categoryOpts } = useFetchCategories();
+const {useCreateProduct, useUpdateProduct} = useMutation();
+const {useInvalidateFetchProductPaginated} = useInvalidateQuery();
+
+
+const {mutate: createProductMutation} = useCreateProduct({
+        onSuccess:async () => {
+            await useInvalidateFetchProductPaginated();
+            toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+            dialogRef.value.close();
+        }
+    }
+)
+
+const {mutate: updateProductMutation} = useUpdateProduct({
+        onSuccess:async () => {
+            await useInvalidateFetchProductPaginated();
+            toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+            dialogRef.value.close();
+        }
+    }
+)
+
 const initialValues = ref({
-    name: '',
-    category: '',
-    region: '',
+    name:null,
+    description: null,
+    category_id: null,
+    qty: 0,
+    rent_price: 0,
 });
 
 const resolver = yupResolver(
     yup.object({
         name: yup.string().required(),
-        category: yup.string().required(),
+        description: yup.string().nullable(),
+        category_id: yup.number().required(),
+        qty: yup.number().required(),
+        rent_price: yup.number().required(),
     })
 );
 
-const onFormSubmit = ({ valid }) => {
+const onFormSubmit = ({ valid, values }) => {
+    console.log(values  );
     if (!valid) {
-        toast.add({ severity: 'error', summary: 'Form tidak valid', life: 2500 });
         return;
     }
-
-    emit('submit', 'xx'); // ✅ valid, kirim ke BaseDialog
+    const id = props?.product?.id;
+    const payload = {
+        name: values.name,
+        description: values.description,
+        category_id: values.category_id,
+        qty: values.qty,
+        rent_price: values.rent_price,
+    }
+    if(id) {
+        updateProductMutation( {id:id, payload})
+    } else {
+        createProductMutation({payload})
+    }
 };
+
+
+watch(
+    () => props.product,
+    newValue => {
+        if (!newValue) {
+            return;
+        }
+        initialValues.value = newValue;
+    },
+    {
+        immediate: true,
+    }
+);
+
+
+
 </script>
 
 <template>
@@ -35,7 +105,7 @@ const onFormSubmit = ({ valid }) => {
         <Form v-slot="$form" :initialValues="initialValues" :resolver="resolver" @submit="onFormSubmit">
             <div class="mb-2">
                 <label for="name">Name</label>
-                    <InputText name="name" placeholder="Username"     class="w-full" />
+                    <InputText name="name" placeholder="Name" class="w-full" />
                     <Message
                         v-if="$form.name?.invalid"
                         severity="error"
@@ -45,22 +115,58 @@ const onFormSubmit = ({ valid }) => {
                         {{ $form.name.error?.message }}
                     </Message>
             </div>
-
             <div class="mb-2">
                 <label for="category">Category</label>
-                <InputText name="category" placeholder="Category"     class="w-full" />
+                <Dropdown  name="category_id"  :options="categoryOpts" optionLabel="name" optionValue="id" placeholder="Select Category" checkmark :highlightOnSelect="false" class="w-full md:w-14rem" />
                 <Message
-                    v-if="$form.category?.invalid"
+                    v-if="$form.category_id?.invalid"
                     severity="error"
-                    variant="simple"
                     size="small"
+                    variant="simple"
                 >
-                    {{ $form.category.error?.message }}
+                    {{ $form.category_id.error?.message }}
                 </Message>
             </div>
 
-            <Button type="submit" label="Submit" icon="pi pi-send" class="mt-4" />
-
+            <div class="mb-2">
+                <label for="qty">QTY</label>
+                    <InputNumber name="qty" placeholder="QTY" class="w-full" />
+                <Message
+                    v-if="$form.qty?.invalid"
+                    severity="error"
+                    size="small"
+                    variant="simple"
+                >
+                    {{ $form.qty.error?.message }}
+                </Message>
+            </div>
+            <div class="mb-2">
+                <label for="rent_price">Rent Price</label>
+                <InputNumber name="rent_price" placeholder="Rent Price" class="w-full" />
+                <Message
+                    v-if="$form.rent_price?.invalid"
+                    severity="error"
+                    size="small"
+                    variant="simple"
+                >
+                    {{ $form.rent_price.error?.message }}
+                </Message>
+            </div>
+            <div class="mb-2">
+                <label for="description">Description</label>
+                <InputText name="description" placeholder="Description" class="w-full" />
+                <Message
+                    v-if="$form.description?.invalid"
+                    severity="error"
+                    size="small"
+                    variant="simple"
+                >
+                    {{ $form.description.error?.message }}
+                </Message>
+            </div>
+            <div class="flex justify-end">
+                <Button type="submit" :label="`${props?.isUpdate ? 'Update' : 'Submit' }`" icon="pi pi-send" class="mt-4" />
+            </div>
         </Form>
     </div>
 </template>

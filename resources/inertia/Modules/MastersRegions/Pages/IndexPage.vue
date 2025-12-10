@@ -3,7 +3,7 @@
 import DashboardLayout from "@/inertia/Components/DashboardLayout.vue";
 import {onMounted} from "vue";
 import useAppBreadcrumbStore from "@/inertia/Stores/useAppBreadcrumbStore.js";
-import CategoryTable from "@/inertia/Modules/MastersCategories/Components/CategoryTable.vue";
+import RegionTable from "@/inertia/Modules/MastersRegions/Components/RegionTable.vue";
 const store = useAppBreadcrumbStore();
 
 onMounted(() => {
@@ -12,7 +12,7 @@ onMounted(() => {
             label: 'Master',
         },
         {
-            label: 'Category'
+            label: 'Region'
         },
     ])
 })
@@ -23,8 +23,8 @@ onMounted(() => {
 
     <DashboardLayout  use-breadcrumb>
         <div class="flex justify-start">
-            <p class="text-xl font-bold">Category</p>
+            <p class="text-xl font-bold">Region</p>
         </div>
-        <CategoryTable />
+        <RegionTable />
     </DashboardLayout>
 </template>

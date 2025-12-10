@@ -13,10 +13,12 @@ class RentTransactionSeeder extends Seeder
         DB::table('rent_transactions')->insert([
             [
                 'product_id' => 1,
+                'region_id' => 1,
                 'renter_name' => 'Budi Santoso',
                 'renter_phone' => '08123456789',
                 'rent_date' => now()->subDays(2),
                 'expected_return_date' => now()->addDays(1),
+                'qty' => 1,
                 'return_date' => null,
                 'status' => 'rented',
                 'notes' => 'Dipinjam untuk presentasi.',

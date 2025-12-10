@@ -13,9 +13,9 @@ class Region extends Model
     protected $fillable = ['name', 'description'];
 
 
-    public function products()
+    public function rentTransaction()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(RentTransaction::class);
     }
 
 }

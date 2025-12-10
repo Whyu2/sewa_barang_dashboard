@@ -14,9 +14,11 @@ class RentTransaction extends Model
 
     protected $fillable = [
         'product_id',
+        'region_id',
         'renter_name',
         'renter_phone',
         'rent_date',
+        'qty',
         'expected_return_date',
         'return_date',
         'status',
@@ -34,5 +36,10 @@ class RentTransaction extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
     }
 }

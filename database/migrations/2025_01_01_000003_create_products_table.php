@@ -11,8 +11,10 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->foreignId('region_id')->constrained('regions')->onDelete('cascade');
-            $table->string('qr_code')->nullable();
+            $table->integer('qty');
+            $table->integer('rent_price');
+            $table->string('qr_code_url')->nullable();
+            $table->text('qr_uuid')->nullable();
             $table->string('photo_url')->nullable();
             $table->string('status')->default('available'); // available, rented, broken
             $table->text('description')->nullable();

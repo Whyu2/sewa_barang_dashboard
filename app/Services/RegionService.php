@@ -3,12 +3,12 @@
 
 namespace App\Services;
 
-use App\Repositories\Interface\CategoryRepositoryInterface;
+use App\Repositories\Interface\RegionRepositoryInterface;
 
-class CategoryService
+class RegionService
 {
     public function __construct(
-        protected CategoryRepositoryInterface $repo
+        protected RegionRepositoryInterface $repo
     )
     {
     }
@@ -25,8 +25,7 @@ class CategoryService
 
     public function paginate($limit)
     {
-        return $this->repo->paginate($limit);
-
+        return $this->repo->paginate( $limit);
     }
 
     public function destroy($id)
@@ -38,5 +37,4 @@ class CategoryService
     {
         return $this->repo->update($data, $id);
     }
-
 }

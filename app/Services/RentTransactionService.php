@@ -3,20 +3,22 @@
 
 namespace App\Services;
 
-use App\Repositories\Interface\CategoryRepositoryInterface;
-
-class CategoryService
+use App\Repositories\Interface\RentTransactionRepositoryInterface;
+class RentTransactionService
 {
     public function __construct(
-        protected CategoryRepositoryInterface $repo
+        protected RentTransactionRepositoryInterface $repo,
     )
     {
     }
 
     public function create(array $data)
     {
+
+
         return $this->repo->create($data);
     }
+
 
     public function all()
     {
@@ -25,8 +27,7 @@ class CategoryService
 
     public function paginate($limit)
     {
-        return $this->repo->paginate($limit);
-
+        return $this->repo->paginate( $limit);
     }
 
     public function destroy($id)
@@ -38,5 +39,4 @@ class CategoryService
     {
         return $this->repo->update($data, $id);
     }
-
 }

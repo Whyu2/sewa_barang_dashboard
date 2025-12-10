@@ -28,9 +28,15 @@
             icon: 'pi pi-database',
             items: [
                 {
-                    label: 'Product Category',
+                    label: 'Category',
                     icon: 'pi pi-tag',
                     route: '/master-category'
+
+                },
+                {
+                    label: 'Region',
+                    icon: 'pi pi-map-marker',
+                    route: '/master-region'
 
                 },
                 {

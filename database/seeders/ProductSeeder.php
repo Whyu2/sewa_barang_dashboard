@@ -13,9 +13,11 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             [
                 'name' => 'Proyektor Epson X200',
-                'region_id' => 1,
                 'category_id' => 1,
-                'qr_code' => 'QR-001',
+                'qty' => 2,
+                'rent_price' => 100000,
+                'qr_code_url' => 'QR-001',
+                'qr_uuid' => 'xxxxxxx',
                 'photo_url' => '/images/products/proyektor.jpg',
                 'status' => 'available',
                 'description' => 'Proyektor untuk presentasi.',
@@ -24,9 +26,11 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Laptop ThinkPad L14',
-                'region_id' => 1,
                 'category_id' => 1,
-                'qr_code' => 'QR-002',
+                'qty' => 5,
+                'rent_price' => 100000,
+                'qr_code_url' => 'QR-002',
+                'qr_uuid' => 'xxxxxxx',
                 'photo_url' => '/images/products/laptop.jpg',
                 'status' => 'available',
                 'description' => 'Laptop kantor.',

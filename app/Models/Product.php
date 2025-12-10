@@ -15,10 +15,14 @@ class Product extends Model
     protected $fillable = [
         'name',
         'category_id',
+        'qty',
+        'rent_price',
         'qr_code',
         'photo_url',
         'status',
         'description',
+        'qr_uuid',
+        'qr_code_url',
     ];
 
     protected $casts = [
@@ -36,12 +40,6 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    // A product belongs to one region
-    public function region()
-    {
-        return $this->belongsTo(Region::class);
     }
 
     // A product has many rent transactions
@@ -71,4 +69,13 @@ class Product extends Model
     {
         return $this->status === 'rented';
     }
+
+    protected $appends = ['category_name'];
+
+    public function getCategoryNameAttribute()
+    {
+        return $this->category?->name;
+    }
+
+    protected $hidden = ['category'];
 }

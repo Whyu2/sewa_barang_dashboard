@@ -12,21 +12,16 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
 
     public function all()
     {
-        return $this->model->with(['category', 'region'])->get();
+        return $this->model->with(['category'])->orderBy('id', 'ASC')->get();
     }
 
     public function paginate($limit = 10)
     {
-        return $this->model->with(['category', 'region'])->paginate($limit);
+        return $this->model->with(['category'])->orderBy('id', 'ASC')->paginate($limit);
     }
 
     public function find($id)
     {
-        return $this->model->with(['category', 'region'])->find($id);
-    }
-
-    public function create(array $data)
-    {
-        return $this->model->create($data);
+        return $this->model->with(['category'])->find($id);
     }
 }

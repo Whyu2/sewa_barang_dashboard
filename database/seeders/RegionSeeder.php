@@ -14,6 +14,12 @@ class RegionSeeder extends Seeder
             [
                 'name' => 'Semarang',
             ],
+            [
+                'name' => 'Yogyakarta',
+            ],
+            [
+                'name' => 'Solo',
+            ],
         ]);
     }
 }

@@ -3,7 +3,7 @@ import {
     createCategory,
     deleteCategory,
     updateCategory
-} from "@/inertia/Modules/MastersCategories/Services/masterCategoryService.js";
+} from "@/inertia/Modules/MastersCategories/Services/CategoryService.js";
 
 const useMutation = () => {
   const useCreateCategory = ({ onSuccess, onError }) =>

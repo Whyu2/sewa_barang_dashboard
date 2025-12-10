@@ -27,6 +27,7 @@ const onCancel = args => {
 </script>
 
 <template>
+    <Divider />
   <component
     :is="component"
     v-bind="componentProps"

@@ -1,5 +1,10 @@
 import useAxios from '@/inertia/Libs/useAxios';
 
+export const fetchCategories = () => {
+    return useAxios()
+        .get('/category')
+        .then(res => res.data.data);
+};
 export const fetchCategoryPaginated = () => {
     const params = {
         limit: 999,

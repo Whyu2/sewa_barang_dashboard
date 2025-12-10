@@ -1,7 +1,7 @@
 <?php
 namespace App\Repositories\Interface;
 
-interface ProductRepositoryInterface
+interface RegionRepositoryInterface
 {
     public function all();
     public function find($id);

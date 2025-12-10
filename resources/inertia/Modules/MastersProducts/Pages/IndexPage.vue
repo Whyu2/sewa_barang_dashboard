@@ -1,9 +1,9 @@
 <script setup>
 
 import DashboardLayout from "@/inertia/Components/DashboardLayout.vue";
-import ProductTable from "@/inertia/Modules/MastersProducts/Components/ProductTable.vue";
 import {onMounted} from "vue";
 import useAppBreadcrumbStore from "@/inertia/Stores/useAppBreadcrumbStore.js";
+import ProductTable from "@/inertia/Modules/MastersProducts/Components/ProductTable.vue";
 const store = useAppBreadcrumbStore();
 
 onMounted(() => {
@@ -21,6 +21,9 @@ onMounted(() => {
 
 <template>
     <DashboardLayout  use-breadcrumb>
+        <div class="flex justify-start ">
+            <p class="text-xl font-bold">Product</p>
+        </div>
         <ProductTable />
     </DashboardLayout>
 </template>

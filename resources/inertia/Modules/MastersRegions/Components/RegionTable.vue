@@ -1,33 +1,33 @@
 <script setup >
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import useQuery from "@/inertia/Modules/MastersCategories/Composables/UseQuery.js";
+import useQuery from "@/inertia/Modules/MastersRegions/Composables/UseQuery.js";
 import {baseDialog} from "@/inertia/Composables/BaseDialog.js";
-import CategoryForm from "@/inertia/Modules/MastersCategories/Components/CategoryForm.vue";
 import { useToast } from "primevue/usetoast";
 import confirmDialog from "@/inertia/Composables/ConfirmDialog.js";
-import useMutation from "@/inertia/Modules/MastersCategories/Composables/UseMutation.js";
-import useInvalidateQuery from "@/inertia/Modules/MastersCategories/Composables/UseInvalidateQuery.js";
+import useMutation from "@/inertia/Modules/MastersRegions/Composables/UseMutation.js";
+import useInvalidateQuery from "@/inertia/Modules/MastersRegions/Composables/UseInvalidateQuery.js";
+import RegionForm from "@/inertia/Modules/MastersRegions/Components/RegionForm.vue";
 
 
-const {useDeleteCategory} = useMutation();
-const {useInvalidateFetchCategoryPaginated} = useInvalidateQuery();
+const {useDeleteRegion} = useMutation();
+const {useInvalidateFetchRegionPaginated} = useInvalidateQuery();
 const toast = useToast();
-const { mutate: deleteCategory } = useDeleteCategory({
+const { mutate: deleteRegion } = useDeleteRegion({
     onSuccess: async () => {
-        await useInvalidateFetchCategoryPaginated();
+        await useInvalidateFetchRegionPaginated();
         toast.add({ severity: 'success', summary: 'Success', life: 2500 });    },
 });
 
-const {useFetchCategoryPaginated} = useQuery();
-const { data:  category } = useFetchCategoryPaginated();
+const {useFetchRegionPaginated} = useQuery();
+const { data:  region } = useFetchRegionPaginated();
 const { openBaseDialog } = baseDialog();
 const {baseConfirmDialog} = confirmDialog();
 const handleOpenDialogAdd = () => {
     openBaseDialog(
         {
-            titleHeader: 'Add New Category',
-        component: CategoryForm,
+            titleHeader: 'Add New Region',
+        component: RegionForm,
         width: `50vw`,
         componentProps: {
             isUpdate: false,
@@ -35,14 +35,14 @@ const handleOpenDialogAdd = () => {
     });
 }
 
-const handleOpenDialogUpdate = (category) => {
+const handleOpenDialogUpdate = (region) => {
     openBaseDialog(
         {
-            titleHeader: 'Update Category',
-            component: CategoryForm,
+            titleHeader: 'Update Region',
+            component: RegionForm,
             width: `50vw`,
             componentProps: {
-                category: category,
+                region: region,
                 isUpdate: true,
             },
         });
@@ -53,7 +53,7 @@ const confirmDelete = (id) => {
         header: 'Delete Confirmation',
         acceptLabel: 'Delete',
         onAccept: () => {
-            deleteCategory({id});
+            deleteRegion({id});
         },
     });
 };
@@ -65,7 +65,7 @@ const confirmDelete = (id) => {
         <div class="flex justify-end mb-4 ">
          <Button label="Add New" @click="handleOpenDialogAdd" icon="pi pi-plus"/>
         </div>
-        <DataTable v-if="category" :value="category.data" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 50rem" show-gridlines>
+        <DataTable v-if="region" :value="region.data" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 50rem" show-gridlines>
             <Column field="name" header="Name" style="width: 25%"></Column>
             <Column field="description" header="Description" style="width: 25%"></Column>
             <Column field="action" header="Action" style="width: 5%">

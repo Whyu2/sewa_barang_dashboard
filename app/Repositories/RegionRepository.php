@@ -1,11 +1,12 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\Category;
-use App\Repositories\Interface\CategoryRepositoryInterface;
-class CategoryRepository extends BaseRepository implements CategoryRepositoryInterface
+use App\Models\Region;
+use App\Repositories\Interface\RegionRepositoryInterface;
+
+class RegionRepository extends BaseRepository implements RegionRepositoryInterface
 {
-    public function __construct(Category $model)
+    public function __construct(Region $model)
     {
         $this->model = $model;
     }

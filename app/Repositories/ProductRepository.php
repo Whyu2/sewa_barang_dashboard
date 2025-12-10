@@ -25,8 +25,14 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         return $this->model->with(['category', 'region'])->find($id);
     }
 
-    public function create(array $data)
+    public function update($data, $id)
     {
-        return $this->model->create($data);
+        return $this->model->where('id', $id)->update([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'category_id' => $data['category_id'],
+            'region_id' => $data['region_id'],
+            'qty' => $data['qty'],
+        ]);
     }
 }

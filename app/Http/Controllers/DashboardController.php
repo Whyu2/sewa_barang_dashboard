@@ -22,4 +22,9 @@ class DashboardController
     {
         return Inertia::render('MastersCategories/Pages/IndexPage');
     }
+
+    public function masterRegion(): Response
+    {
+        return Inertia::render('MastersRegions/Pages/IndexPage');
+    }
 }

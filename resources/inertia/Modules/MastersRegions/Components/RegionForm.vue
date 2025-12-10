@@ -4,15 +4,15 @@ import { useToast } from 'primevue/usetoast';
 import { Form } from '@primevue/forms';
 import { yupResolver } from '@primevue/forms/resolvers/yup';
 import * as yup from "yup";
-import useMutation from "@/inertia/Modules/MastersCategories/Composables/UseMutation.js";
-import useInvalidateQuery from "@/inertia/Modules/MastersCategories/Composables/UseInvalidateQuery.js";
+import useMutation from "@/inertia/Modules/MastersRegions/Composables/UseMutation.js";
+import useInvalidateQuery from "@/inertia/Modules/MastersRegions/Composables/UseInvalidateQuery.js";
 
 const props = defineProps({
     isUpdate: {
         type: Boolean,
         default: false,
     },
-    category: {
+    region: {
         type: Object,
         default: null,
     },
@@ -20,20 +20,20 @@ const props = defineProps({
 const toast = useToast();
 const dialogRef = inject('dialogRef');
 
-const {useCreateCategory, useUpdateCategory} = useMutation()
-const {useInvalidateFetchCategoryPaginated} = useInvalidateQuery();
-const {mutate: createCategoryMutation} = useCreateCategory({
+const {useCreateRegion, useUpdateRegion} = useMutation()
+const {useInvalidateFetchRegionPaginated} = useInvalidateQuery();
+const {mutate: createRegionMutation} = useCreateRegion({
         onSuccess:async () => {
-            await useInvalidateFetchCategoryPaginated();
+            await useInvalidateFetchRegionPaginated();
             toast.add({ severity: 'success', summary: 'Success', life: 2500 });
             dialogRef.value.close();
         }
     }
 )
 
-const {mutate: updateCategoryMutation} = useUpdateCategory({
+const {mutate: updateRegionMutation} = useUpdateRegion({
         onSuccess:async () => {
-            await useInvalidateFetchCategoryPaginated();
+            await useInvalidateFetchRegionPaginated();
             toast.add({ severity: 'success', summary: 'Success', life: 2500 });
             dialogRef.value.close();
         }
@@ -57,22 +57,22 @@ const onFormSubmit = ({ valid, values }) => {
     if (!valid) {
         return;
     }
-    const id = props?.category?.id;
+    const id = props?.region?.id;
     const payload = {
         name: values.name,
         description: values.description,
     }
     if(id) {
-        updateCategoryMutation( {id:id, payload})
+        updateRegionMutation( {id:id, payload})
     } else {
-        createCategoryMutation({payload})
+        createRegionMutation({payload})
     }
 
 };
 
 
 watch(
-    () => props.category,
+    () => props.region,
     newValue => {
         if (!newValue) {
             return;

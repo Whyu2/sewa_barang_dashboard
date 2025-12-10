@@ -15,10 +15,14 @@ class Product extends Model
     protected $fillable = [
         'name',
         'category_id',
+        'region_id',
+        'qty',
         'qr_code',
         'photo_url',
         'status',
         'description',
+        'qr_uuid',
+        'qr_code_url',
     ];
 
     protected $casts = [

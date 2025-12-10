@@ -18,10 +18,14 @@ import DialogService from 'primevue/dialogservice';
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
 import InputText from 'primevue/inputtext';
+import InputNumber from 'primevue/inputnumber';
+import Image from 'primevue/image';
+import Dropdown from 'primevue/dropdown';
 import Message from 'primevue/message';
 import { queryClient,  registerApp} from './Composables/QueryClient.js';
 import ConfirmationService from 'primevue/confirmationservice';
-
+import Tag from 'primevue/tag';
+import Divider from 'primevue/divider';
 
 
 createInertiaApp({
@@ -52,12 +56,17 @@ createInertiaApp({
         });
 
         app.component('InputText', InputText);
+        app.component('Dropdown', Dropdown);
+        app.component('InputNumber', InputNumber);
         app.component('Toast', Toast);
         app.component('Message', Message);
         app.component('Drawer', Drawer);
         app.component('Button', Button);
         app.component('Avatar', Avatar);
         app.component('Menubar', Menubar);
+        app.component('Image', Image);
+        app.component('Tag', Tag);
+        app.component('Divider', Divider);
 
         // 🔥 REGISTER DIRECTIVES
         app.directive('ripple', Ripple);

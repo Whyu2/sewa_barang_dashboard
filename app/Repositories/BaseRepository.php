@@ -29,13 +29,13 @@ abstract class BaseRepository
         return $this->model->create($data);
     }
 
-    public function update($data, $id)
+    public function update(Model $model, array $data)
     {
-        return $this->model->where('id', $id)->update($data);
+        return $model->update($data);
     }
 
     public function destroy($id)
     {
-        return $this->model->where('id', $id)->update();
+        return $this->model->where('id', $id)->delete();
     }
 }

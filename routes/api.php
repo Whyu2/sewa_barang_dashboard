@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\RegionController;
 use App\Http\Controllers\Api\RentTransactionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
 
 Route::get('/rent-transactions', [RentTransactionController::class, 'rentTransactions']);
 Route::get('/rent-transactions-paginated', [RentTransactionController::class, 'rentTransactionPaginated']);
@@ -11,7 +12,7 @@ Route::post('/rent-transaction', [RentTransactionController::class, 'rentTransac
 Route::put('/rent-transaction/{id}', [RentTransactionController::class, 'rentTransactionUpdate']);
 Route::delete('/rent-transaction/{id}', [RentTransactionController::class, 'rentTransactionDestroy']);
 
-Route::get('/regions', [RegionController::class, 'regions']);
+
 Route::get('/region-paginated', [RegionController::class, 'regionPaginated']);
 Route::post('/region', [RegionController::class, 'regionStore']);
 Route::put('/region/{id}', [RegionController::class, 'regionUpdate']);
@@ -23,8 +24,22 @@ Route::post('/product', [ProductController::class, 'productStore']);
 Route::put('/product/{id}', [ProductController::class, 'productUpdate']);
 Route::delete('/product/{id}', [ProductController::class, 'productDestroy']);
 
-Route::get('/category', [CategoryController::class, 'categories']);
-Route::get('/category-paginated', [CategoryController::class, 'categoryPaginated']);
-Route::post('/category', [CategoryController::class, 'categoryStore']);
-Route::put('/category/{id}', [CategoryController::class, 'categoryUpdate']);
-Route::delete('/category/{id}', [CategoryController::class, 'categoryDestroy']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/regions', [RegionController::class, 'regions']);
+    Route::get('/category', [CategoryController::class, 'categories']);
+    Route::get('/category-paginated', [CategoryController::class, 'categoryPaginated']);
+    Route::post('/category', [CategoryController::class, 'categoryStore']);
+    Route::put('/category/{id}', [CategoryController::class, 'categoryUpdate']);
+    Route::delete('/category/{id}', [CategoryController::class, 'categoryDestroy']);
+});
+
+
+
+// auth
+
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']);
+});

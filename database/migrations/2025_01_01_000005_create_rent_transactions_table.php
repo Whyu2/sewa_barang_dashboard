@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->string('renter_name');
             $table->string('renter_phone')->nullable();
             $table->dateTime('rent_date');
+            $table->integer('rent_price');
             $table->integer('qty');
             $table->dateTime('expected_return_date');
             $table->dateTime('return_date')->nullable();

@@ -17,6 +17,7 @@ class RentTransactionSeeder extends Seeder
                 'renter_name' => 'Budi Santoso',
                 'renter_phone' => '08123456789',
                 'rent_date' => now()->subDays(2),
+                'rent_price' => 100000,
                 'expected_return_date' => now()->addDays(1),
                 'qty' => 1,
                 'return_date' => null,

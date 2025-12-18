@@ -13,6 +13,12 @@ class DashboardController
         return Inertia::render('Home/Pages/IndexPage');
     }
 
+    public function login(): Response
+    {
+
+        return Inertia::render('Auth/Pages/LoginPage');
+    }
+
     public function masterProduct(): Response
     {
         return Inertia::render('MastersProducts/Pages/IndexPage');

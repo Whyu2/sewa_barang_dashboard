@@ -25,7 +25,7 @@ class AuthController extends BaseController
         // hapus token lama (optional)
         $user->tokens()->delete();
 
-        return response()->json([
+        return $this->success([
             'token' => $user->createToken('api')->plainTextToken,
             'user' => $user
         ]);
@@ -33,15 +33,14 @@ class AuthController extends BaseController
 
     public function me(Request $request)
     {
-        return response()->json($request->user());
+        return $this->success($request->user());
+
     }
 
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json([
-            'message' => 'Logout berhasil'
-        ]);
+        return $this->success();
     }
 }

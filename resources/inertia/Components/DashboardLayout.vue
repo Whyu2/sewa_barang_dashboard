@@ -1,11 +1,37 @@
     <script setup>
     import { ref } from "vue";
     import AppBreadcrumb from "@/inertia/Components/AppBreadcrumb.vue";
-    import LoaderOverlay from "@/inertia/Components/LoaderOverlay.vue";
-    import { Link } from '@inertiajs/vue3';
-    import DynamicDialog from 'primevue/dynamicdialog';
-    import Toast from 'primevue/toast';
-    import ConfirmDialog from 'primevue/confirmdialog';
+    import {Link, router} from '@inertiajs/vue3';
+    import confirmDialog from "@/inertia/Composables/ConfirmDialog.js";
+    import InertiaApp from "@/inertia/inertiaApp.vue";
+    import useMutation from "@/inertia/Modules/Auth/Composables/UseMutation.js";
+    import useAuthStore from "@/inertia/Modules/Auth/Stores/useAuthStore.js";
+    import {useToast} from "primevue/usetoast";
+
+    const toast = useToast();
+    const {baseConfirmDialog} = confirmDialog();
+    const {useLogout} = useMutation();
+    const authStore = useAuthStore();
+
+    const {mutate: logout} = useLogout({
+            onSuccess:async () => {
+                authStore.logout();
+                router.visit('/login')
+                toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+            }
+        }
+    )
+
+    const confirmLogout = () => {
+        baseConfirmDialog({
+            message: 'Do you want to logout ? ',
+            header: 'Logout Confirmation',
+            acceptLabel: 'Logout',
+            onAccept: () =>  {
+                logout()
+            },
+        });
+    }
 
     const props = defineProps({
         useBreadcrumb: { type: Boolean, required: false, default: false },
@@ -54,11 +80,7 @@
     ]);
     </script>
     <template>
-        <Toast />
-        <DynamicDialog />
-        <LoaderOverlay />
-        <ConfirmDialog />
-
+        <inertiaApp>
         <div class="card">
                 <Menubar :model="items">
                     <template #item="{ item, props, hasSubmenu, root }">
@@ -77,18 +99,23 @@
                         </a>
                     </template>
                     <template #end>
-                        <div class="flex items-center gap-2">
-                        </div>
+                        <Button
+                            icon="pi pi-sign-out"
+                            class="flex items-center gap-2"
+                            @click="confirmLogout"
+                        >
+                        </Button>
+
                     </template>
                 </Menubar>
             </div>
 
                 <AppBreadcrumb v-if="props.useBreadcrumb"/>
 
-            <div class="pl-4 pr-4">
+            <div class="pl-4 pr-4 pt-4">
 
                 <slot />
             </div>
-
+        </inertiaApp>
 
     </template>

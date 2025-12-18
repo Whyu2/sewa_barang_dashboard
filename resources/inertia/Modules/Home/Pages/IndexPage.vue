@@ -10,7 +10,7 @@ const {useFetchProducts} = homeUseQuery();
 const { data:  products, } = useFetchProducts();
 
 const totalProducts = computed(() => {
-    return products.value.length;
+    return products?.value?.length ?? 0;
 })
 </script>
 

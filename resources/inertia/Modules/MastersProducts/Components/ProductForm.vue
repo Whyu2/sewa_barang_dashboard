@@ -49,7 +49,6 @@ const initialValues = ref({
     description: null,
     category_id: null,
     qty: 0,
-    rent_price: 0,
 });
 
 const resolver = yupResolver(
@@ -58,7 +57,6 @@ const resolver = yupResolver(
         description: yup.string().nullable(),
         category_id: yup.number().required(),
         qty: yup.number().required(),
-        rent_price: yup.number().required(),
     })
 );
 
@@ -73,7 +71,6 @@ const onFormSubmit = ({ valid, values }) => {
         description: values.description,
         category_id: values.category_id,
         qty: values.qty,
-        rent_price: values.rent_price,
     }
     if(id) {
         updateProductMutation( {id:id, payload})
@@ -140,18 +137,7 @@ watch(
                     {{ $form.qty.error?.message }}
                 </Message>
             </div>
-            <div class="mb-2">
-                <label for="rent_price">Rent Price</label>
-                <InputNumber name="rent_price" placeholder="Rent Price" class="w-full" />
-                <Message
-                    v-if="$form.rent_price?.invalid"
-                    severity="error"
-                    size="small"
-                    variant="simple"
-                >
-                    {{ $form.rent_price.error?.message }}
-                </Message>
-            </div>
+       
             <div class="mb-2">
                 <label for="description">Description</label>
                 <InputText name="description" placeholder="Description" class="w-full" />

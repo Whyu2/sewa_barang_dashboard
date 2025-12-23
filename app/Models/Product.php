@@ -16,7 +16,6 @@ class Product extends Model
         'name',
         'category_id',
         'qty',
-        'rent_price',
         'qr_code',
         'photo_url',
         'status',

@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->text('notes')->nullable();
             $table->string('pickup_proof_url')->nullable();
             $table->string('return_proof_url')->nullable();
+            $table->timestamps();
         });
     }
 

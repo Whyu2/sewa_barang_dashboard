@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Repositories\Interface\ProductRepositoryInterface;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Product;
 class ProductService
 {
     public function __construct(
@@ -53,6 +54,17 @@ class ProductService
     public function update(array $data ,$id)
     {
         return $this->repo->update($data, $id);
+    }
+
+    public function findByQrCode($qr_uuid)
+    {
+        $product = Product::where('qr_uuid', $qr_uuid)->first();
+        if(!$product){
+                throw ValidationException::withMessages([
+                    'qr_uuid' => 'Product not found',
+                ]);
+        }
+        return $this->repo->find($product->id);
     }
 
 

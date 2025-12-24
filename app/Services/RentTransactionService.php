@@ -4,6 +4,11 @@
 namespace App\Services;
 
 use App\Repositories\Interface\RentTransactionRepositoryInterface;
+use Illuminate\Validation\ValidationException;
+use App\Models\Product;
+use Illuminate\Support\Facades\DB;
+
+
 class RentTransactionService
 {
     public function __construct(
@@ -12,12 +17,23 @@ class RentTransactionService
     {
     }
 
-    public function create(array $data)
+    public function createByQr(array $data)
     {
-
-
-        return $this->repo->create($data);
+        return DB::transaction(function () use ($data) {
+            $product = Product::where('qr_uuid', $data['qr_uuid'])->first();
+        
+            if(!$product){
+                throw ValidationException::withMessages([
+                    'qr_uuid' => 'Product not found',
+                ]);
+            }
+            return $this->repo->create([
+                ...$data,   
+                'product_id' => $product->id,
+            ]);
+        });
     }
+
 
 
     public function all()

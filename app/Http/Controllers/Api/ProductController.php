@@ -43,4 +43,16 @@ class ProductController extends BaseController
     {
         return $this->service->update($request->all() , $id);
     }
+
+
+    public function productFindByQrCode(Request $request)
+    {
+        try {
+        $product = $this->service->findByQrCode($request->qr_uuid);
+        return $this->success($product);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 422);
+        }
+    
+    }
 }

@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/product', [ProductController::class, 'productStore']);
     Route::put('/product/{id}', [ProductController::class, 'productUpdate']);
     Route::delete('/product/{id}', [ProductController::class, 'productDestroy']);
+    Route::get('/product-by-qr', [ProductController::class, 'productFindByQrCode']);
 });
 
 

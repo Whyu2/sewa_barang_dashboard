@@ -20,6 +20,7 @@ class RentTransaction extends Model
         'rent_date',
         'qty',
         'expected_return_date',
+        'rent_price',
         'return_date',
         'status',
         'notes',

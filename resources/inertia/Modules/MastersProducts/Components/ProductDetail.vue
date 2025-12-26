@@ -34,7 +34,7 @@ const downloadImage = async () => {
 
             <div>
                 <p class="text-gray-500 text-sm">Kategori</p>
-                <p class="text-lg font-semibold">{{ props.product.category?.name }}</p>
+                <p class="text-lg font-semibold">{{ props.product.category_name }}</p>
             </div>
 
             <div>
@@ -58,15 +58,18 @@ const downloadImage = async () => {
                 </div>
             </div>
             <div>
-                <p class="text-gray-500 text-sm">QTY</p>
-                <p class="text-lg font-semibold">{{ props.product.qty }}</p>
+                <p class="text-gray-500 text-sm">Region - QTY</p>
+                <div v-for="region in  props.product.product_region">
+                    <p>{{ region.region_name }} - {{ region.qty }}</p>
+                </div>
+            
             </div>
 
             <div class="col-span-2">
                 <p class="text-gray-500 text-sm">Deskripsi</p>
-                <p class="mt-2">{{ props.product.description }}</p>
+                <p class="mt-2">{{ props.product.description ?? '-' }}</p>
             </div>
-
+        
         </div>
     </Card>
 </template>

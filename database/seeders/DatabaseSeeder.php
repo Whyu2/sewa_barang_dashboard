@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             RentTransactionSeeder::class,
             ProductLogSeeder::class,
+            ProductRegionSeeder::class
         ]);
     }
 }

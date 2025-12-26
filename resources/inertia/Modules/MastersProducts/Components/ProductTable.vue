@@ -81,7 +81,6 @@ const confirmDelete = (id) => {
         <DataTable v-if="product" :value="product.data" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 50rem" show-gridlines>
             <Column field="name" header="Name" style="width: 25%"></Column>
             <Column field="category_name" header="Category" style="width: 25%"></Column>
-            <Column field="qty" header="QTY"></Column>
             <Column field="rent_price" header="Rent Price"></Column>
             <Column field="action" header="Action">
                 <template #body="slotProps">

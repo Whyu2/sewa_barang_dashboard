@@ -9,10 +9,10 @@ import Button from 'primevue/button';
 import Ripple from 'primevue/ripple';
 import StyleClass from 'primevue/styleclass';
 import Avatar from 'primevue/avatar';
-import {Menubar} from "primevue";
+import { Menubar } from "primevue";
 import './Assets/main.css';
 import { createPinia } from 'pinia';
-import {  VueQueryPlugin } from '@tanstack/vue-query';
+import { VueQueryPlugin } from '@tanstack/vue-query';
 import router from './Routers/index.js'
 import DialogService from 'primevue/dialogservice';
 import ToastService from 'primevue/toastservice';
@@ -22,7 +22,9 @@ import InputNumber from 'primevue/inputnumber';
 import Image from 'primevue/image';
 import Dropdown from 'primevue/dropdown';
 import Message from 'primevue/message';
-import { queryClient,  registerApp} from './Composables/QueryClient.js';
+import Checkbox from 'primevue/checkbox';
+import CheckboxGroup from 'primevue/checkboxgroup';
+import { queryClient, registerApp } from './Composables/QueryClient.js';
 import ConfirmationService from 'primevue/confirmationservice';
 import Tag from 'primevue/tag';
 import Divider from 'primevue/divider';
@@ -67,6 +69,8 @@ createInertiaApp({
         app.component('Image', Image);
         app.component('Tag', Tag);
         app.component('Divider', Divider);
+        app.component('Checkbox', Checkbox);
+        app.component('CheckboxGroup', CheckboxGroup);
 
         // 🔥 REGISTER DIRECTIVES
         app.directive('ripple', Ripple);

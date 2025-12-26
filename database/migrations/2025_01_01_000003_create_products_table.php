@@ -11,7 +11,6 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->integer('qty');
             $table->string('qr_code_url')->nullable();
             $table->text('qr_uuid')->nullable();
             $table->string('photo_url')->nullable();

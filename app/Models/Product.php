@@ -15,7 +15,6 @@ class Product extends Model
     protected $fillable = [
         'name',
         'category_id',
-        'qty',
         'qr_code',
         'photo_url',
         'status',
@@ -39,6 +38,11 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function productRegion()
+    {
+        return $this->hasMany(ProductRegion::class);
     }
 
     // A product has many rent transactions
@@ -76,5 +80,11 @@ class Product extends Model
         return $this->category?->name;
     }
 
+    public function getProductRegion($query)
+    {
+        return $this->productRegion;
+    }
+
+ 
     protected $hidden = ['category'];
 }

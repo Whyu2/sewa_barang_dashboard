@@ -29,9 +29,11 @@ abstract class BaseRepository
         return $this->model->create($data);
     }
 
-    public function update(array $data ,$id)
+  public function update(array $data, $id)
     {
-        return $this->model->where('id', $id)->update($data);
+        $product = $this->model->findOrFail($id);
+        $product->update($data);
+        return $product; 
     }
 
     public function destroy($id)

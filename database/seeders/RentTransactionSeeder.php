@@ -23,7 +23,7 @@ class RentTransactionSeeder extends Seeder
                     'return_date' => null,
                     'status' => 'rented',
                     'notes' => 'Dipinjam untuk presentasi.',
-                    'pickup_proof_url' => '/images/proof/pickup1.jpg',
+                    'pickup_proof_url' => 'https://picsum.photos/200',
                     'return_proof_url' => null,
                 ],
             ]);

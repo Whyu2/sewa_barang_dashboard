@@ -20,7 +20,7 @@ class ProductService
     public function create(array $data)
     {
         return DB::transaction(function () use ($data) {
-            $regions = $data['product_region'] ?? [];
+            $regions = json_decode($data['product_region'] ?? [], true);
             unset($data['product_region']);
 
             $data['qr_uuid'] = uuid_create();
@@ -32,6 +32,14 @@ class ProductService
             $data['qr_code_url'] = asset('storage/' . $filePath);
 
 
+            // file upload
+            $productImage = $data['product_image'];
+            $filePath = 'product_images/' . $productImage->hashName();
+
+            Storage::disk('public')->put($filePath, file_get_contents($productImage));
+            $data['product_image'] = asset('storage/' . $filePath);
+        
+            $data['photo_url'] = asset('storage/' . $filePath);
             $product = $this->repo->create($data);
 
             foreach ($regions as $row) {
@@ -61,23 +69,31 @@ class ProductService
     }
 
     public function update(array $data, $id)
-    {
-        return DB::transaction(function () use ($data, $id) {
+{
+    return DB::transaction(function () use ($data, $id) {
 
-            $regions = $data['product_region'] ?? [];
-            unset($data['product_region']);
+        $regions = json_decode($data['product_region'] ?? [], true);
+        unset($data['product_region']);
 
-            $product = $this->repo->update($data, $id);
+        $product = $this->repo->update($data, $id);
+        if (!empty($data['product_image'])) {
+            $file = $data['product_image'];
+            $filePath = 'product_images/' . $file->hashName();
+            Storage::disk('public')->put($filePath, file_get_contents($file));
+            $product->photo_url = asset('storage/' . $filePath);
+            $product->save();
+        }
+        
+        // reset relasi product region
+        $product->productRegion()->delete();
 
-            $product->productRegion()->delete();
+        foreach ($regions as $row) {
+            $product->productRegion()->create($row);
+        }
 
-            foreach ($regions as $row) {
-                $product->productRegion()->create($row);
-            }
-
-            return $product->load('productRegion');
-        });
-    }
+        return $product->load('productRegion');
+    });
+}
 
     public function findByQrCode($qr_uuid)
     {

@@ -4,14 +4,17 @@ export const fetchProductPaginated = () => {
     const params = {
         limit: 999,
     }
-  return useAxios()
-    .get('/product-paginated', {params})
-    .then(res => res.data.data);
+    return useAxios()
+        .get('/product-paginated', { params })
+        .then(res => res.data.data);
 };
 
 export const createProduct = payload => {
     return useAxios()
-        .post('/product', payload)
+        .post('/product', payload, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
+
         .then(res => res.data.data);
 };
 
@@ -22,8 +25,11 @@ export const deleteProduct = id => {
 };
 
 
-export const updateProduct = ( id, payload ) => {
+export const updateProduct = (id, payload) => {
+    payload.append('_method', 'PUT');
     return useAxios()
-        .put(`/product/${id}`, payload)
+        .post(`/product/${id}`, payload, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
         .then(res => res.data.data);
 };

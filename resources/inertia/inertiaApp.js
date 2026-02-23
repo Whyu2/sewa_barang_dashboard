@@ -28,6 +28,8 @@ import { queryClient, registerApp } from './Composables/QueryClient.js';
 import ConfirmationService from 'primevue/confirmationservice';
 import Tag from 'primevue/tag';
 import Divider from 'primevue/divider';
+import FileUpload from 'primevue/fileupload';
+
 
 
 createInertiaApp({
@@ -71,6 +73,7 @@ createInertiaApp({
         app.component('Divider', Divider);
         app.component('Checkbox', Checkbox);
         app.component('CheckboxGroup', CheckboxGroup);
+        app.component('FileUpload', FileUpload);
 
         // 🔥 REGISTER DIRECTIVES
         app.directive('ripple', Ripple);

@@ -1,0 +1,960 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Sewa Barang API Documentation",
+        "description": "Dokumentasi API untuk platform dashboard Sewa Barang",
+        "contact": {
+            "email": "admin@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User login",
+                "description": "Login dengan email dan password untuk mendapatkan Bearer Token",
+                "operationId": "authLogin",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login Berhasil"
+                    },
+                    "401": {
+                        "description": "Email atau Password salah"
+                    }
+                }
+            }
+        },
+        "/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get current user profile",
+                "description": "Mengambil data user yang sedang login menggunakan token",
+                "operationId": "authMe",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil data profile"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout user",
+                "description": "Menghapus token akses yang sedang digunakan",
+                "operationId": "authLogout",
+                "responses": {
+                    "200": {
+                        "description": "Logout Berhasil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Daftar kategori",
+                "description": "Mengambil semua daftar kategori barang",
+                "operationId": "getCategoryList",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil data"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Buat kategori baru",
+                "description": "Menambahkan kategori barang baru",
+                "operationId": "storeCategory",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Elektronik"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Kategori berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/categories-paginated": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Daftar kategori (Paginated)",
+                "description": "Mengambil daftar kategori dengan sistem pagination",
+                "operationId": "getCategoryPaginated",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil data"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/categories/{id}": {
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Update kategori",
+                "description": "Memperbarui data kategori berdasarkan ID",
+                "operationId": "updateCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Kategori",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Elektronik Updated"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Kategori berhasil diperbarui"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Hapus kategori",
+                "description": "Menghapus kategori berdasarkan ID",
+                "operationId": "destroyCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Kategori",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Kategori berhasil dihapus"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Mendapatkan daftar semua produk",
+                "description": "Mengembalikan array berisi semua data produk",
+                "operationId": "getProductList",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil data"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Menambahkan produk baru",
+                "description": "Membuat data produk baru ke dalam database",
+                "operationId": "storeProduct",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "category_id",
+                                    "price"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Barang A"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": 50000
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Produk berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/products-paginated": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Daftar produk (Paginated)",
+                "description": "Mengambil daftar produk dengan sistem pagination",
+                "operationId": "getProductPaginated",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil data"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/products/{id}": {
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update produk",
+                "description": "Memperbarui data produk berdasarkan ID",
+                "operationId": "updateProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Produk",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Barang Updated"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": 60000
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Produk berhasil diperbarui"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Hapus produk",
+                "description": "Menghapus produk berdasarkan ID",
+                "operationId": "destroyProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Produk",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Produk berhasil dihapus"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/products/find-by-qr": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Cari produk dengan QR Code",
+                "description": "Mencari data produk berdasarkan UUID QR Code",
+                "operationId": "productFindByQrCode",
+                "parameters": [
+                    {
+                        "name": "qr_uuid",
+                        "in": "query",
+                        "description": "UUID QR Code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data produk ditemukan"
+                    },
+                    "422": {
+                        "description": "Data tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/regions": {
+            "get": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Daftar wilayah",
+                "description": "Mengambil semua daftar wilayah/lokasi",
+                "operationId": "getRegionList",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil data"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Buat wilayah baru",
+                "description": "Menambahkan wilayah baru ke dalam database",
+                "operationId": "storeRegion",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Jakarta Selatan"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Wilayah berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/regions-paginated": {
+            "get": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Daftar wilayah (Paginated)",
+                "description": "Mengambil daftar wilayah dengan sistem pagination",
+                "operationId": "getRegionPaginated",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil data"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/regions/{id}": {
+            "put": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Update wilayah",
+                "description": "Memperbarui data wilayah berdasarkan ID",
+                "operationId": "updateRegion",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Wilayah",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Jakarta Pusat"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Wilayah berhasil diperbarui"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Hapus wilayah",
+                "description": "Menghapus wilayah berdasarkan ID",
+                "operationId": "destroyRegion",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Wilayah",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Wilayah berhasil dihapus"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/rent-transactions": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Daftar transaksi sewa",
+                "description": "Mengambil semua riwayat transaksi sewa barang",
+                "operationId": "getRentTransactionList",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil data"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Buat transaksi sewa baru",
+                "description": "Mendaftarkan transaksi sewa barang baru dengan QR Code",
+                "operationId": "storeRentTransaction",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "qr_uuid",
+                                    "region_id",
+                                    "renter_name",
+                                    "renter_phone",
+                                    "rent_date",
+                                    "expected_return_date",
+                                    "qty",
+                                    "rent_price"
+                                ],
+                                "properties": {
+                                    "qr_uuid": {
+                                        "type": "string",
+                                        "example": "uuid-qr-123"
+                                    },
+                                    "region_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "renter_name": {
+                                        "type": "string",
+                                        "example": "Budi Utomo"
+                                    },
+                                    "renter_phone": {
+                                        "type": "string",
+                                        "example": "08123456789"
+                                    },
+                                    "rent_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-04-02"
+                                    },
+                                    "expected_return_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-04-05"
+                                    },
+                                    "qty": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "rent_price": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Transaksi berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/rent-transactions-paginated": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Daftar transaksi sewa (Paginated)",
+                "description": "Mengambil daftar transaksi dengan sistem pagination",
+                "operationId": "getRentTransactionPaginated",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil data"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/rent-transactions/{id}": {
+            "put": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Update transaksi",
+                "description": "Memperbarui data transaksi sewa berdasarkan ID",
+                "operationId": "updateRentTransaction",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Transaksi",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "renter_name": {
+                                        "type": "string",
+                                        "example": "Budi Utomo Updated"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transaksi berhasil diperbarui"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Hapus transaksi",
+                "description": "Menghapus riwayat transaksi sewa berdasarkan ID",
+                "operationId": "destroyRentTransaction",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Transaksi",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaksi berhasil dihapus"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
+        },
+        {
+            "name": "Regions",
+            "description": "Regions"
+        },
+        {
+            "name": "Transactions",
+            "description": "Transactions"
+        }
+    ]
+}

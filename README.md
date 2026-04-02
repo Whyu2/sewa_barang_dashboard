@@ -64,6 +64,16 @@ Akses:
 
 ---
 
+## 📚 API Documentation (Swagger)
+
+Interactive API documentation is available via Swagger.
+
+* **URL:** `http://localhost:8000/api/documentation`
+* **Auth:** Use **Login** endpoint, then click **Authorize** and enter `Bearer <token>`.
+* **Update Docs:** `php artisan l5-swagger:generate`
+
+---
+
 ## 🗄️ Database
 
 ### Migration

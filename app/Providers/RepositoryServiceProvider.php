@@ -13,6 +13,8 @@ use App\Repositories\RentTransactionRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\ProductRepository;
+use App\Repositories\Interface\TransactionLogRepositoryInterface;
+use App\Repositories\TransactionLogRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -22,5 +24,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
         $this->app->bind(RegionRepositoryInterface::class, RegionRepository::class);
         $this->app->bind(RentTransactionRepositoryInterface::class, RentTransactionRepository::class);
+        $this->app->bind(TransactionLogRepositoryInterface::class, TransactionLogRepository::class);
     }
 }

@@ -121,7 +121,8 @@ class RentTransactionController extends BaseController
     )]
     public function rentTransactionDestroy($id)
     {
-        return $this->service->destroy($id);
+        $this->service->destroy($id);
+        return $this->success(null, "Transaction deleted");
     }
 
     #[OA\Put(
@@ -149,6 +150,28 @@ class RentTransactionController extends BaseController
     )]
     public function rentTransactionUpdate(Request $request, $id)
     {
-        return $this->service->update($request->all(), $id);
+        $data = $request->validate([
+            'renter_name' => 'sometimes|string|max:255',
+            'renter_phone' => 'sometimes|string|max:50',
+            'rent_date' => 'sometimes|date',
+            'expected_return_date' => 'sometimes|date|after_or_equal:rent_date',
+            'return_date' => 'required_if:status,returned|nullable|date|after_or_equal:rent_date',
+            'qty' => 'sometimes|integer|min:1',
+            'rent_price' => 'sometimes|integer|min:0',
+            'status' => 'sometimes|string|in:rented,returned,overdue',
+            'notes' => 'sometimes|nullable|string',
+            'region_id' => 'sometimes|integer|exists:regions,id',
+            'return_proof' => 'sometimes|nullable|image|max:4096',
+        ]);
+
+        if ($request->hasFile('return_proof')) {
+            $file = $request->file('return_proof');
+            $path = 'return_proofs/' . $file->hashName();
+            \Illuminate\Support\Facades\Storage::disk('public')->put($path, file_get_contents($file));
+            $data['return_proof_url'] = asset('storage/' . $path);
+        }
+
+        $updated = $this->service->update($data, $id);
+        return $this->success($updated, "Transaction updated");
     }
 }

@@ -27,10 +27,20 @@ class RentTransactionService
                     'qr_uuid' => 'Product not found',
                 ]);
             }
-            return $this->repo->create([
+            $tx = $this->repo->create([
                 ...$data,   
                 'product_id' => $product->id,
             ]);
+            \App\Models\TransactionLog::create([
+                'transaction_id' => $tx->id,
+                'product_id' => $product->id,
+                'user_id' => auth()->id() ?? 1,
+                'action' => $tx->status ?? 'rent',
+                'from_status' => null,
+                'to_status' => $tx->status,
+                'metadata' => ['qty'=>$tx->qty,'rent_price'=>$tx->rent_price,'renter'=>$tx->renter_name],
+            ]);
+            return $tx;
         });
     }
 
@@ -53,6 +63,32 @@ class RentTransactionService
 
     public function update(array $data ,$id)
     {
-        return $this->repo->update($data, $id);
+        $old = $this->repo->find($id);
+        if (isset($data['status']) && $data['status']==='returned' && isset($data['return_date']) && isset($data['expected_return_date'])) {
+            try {
+                if (\Carbon\Carbon::parse($data['return_date'])->gt(\Carbon\Carbon::parse($data['expected_return_date'])->addHour())) {
+                    $data['status']='overdue';
+                }
+            } catch (\Exception $e) {}
+        } elseif (isset($data['status']) && $data['status']==='returned' && isset($data['return_date']) && $old && $old->expected_return_date) {
+            try {
+                if (\Carbon\Carbon::parse($data['return_date'])->gt(\Carbon\Carbon::parse($old->expected_return_date)->addHour())) {
+                    $data['status']='overdue';
+                }
+            } catch (\Exception $e) {}
+        }
+        $updated = $this->repo->update($data, $id);
+        if (isset($data['status']) && $old && $old->status !== $data['status']) {
+            \App\Models\TransactionLog::create([
+                'transaction_id' => $updated->id,
+                'product_id' => $updated->product_id,
+                'user_id' => auth()->id() ?? 1,
+                'action' => $data['status'],
+                'from_status' => $old->status,
+                'to_status' => $data['status'],
+                'metadata' => ['return_date'=>$data['return_date'] ?? null],
+            ]);
+        }
+        return $updated;
     }
 }

@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\RegionController;
 use App\Http\Controllers\Api\RentTransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\TransactionLogController;
 
 
 
@@ -27,6 +29,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/region', [RegionController::class, 'regionStore']);
     Route::put('/region/{id}', [RegionController::class, 'regionUpdate']);
     Route::delete('/region/{id}', [RegionController::class, 'regionDestroy']);
+
+    Route::get('/dashboard-stats', [DashboardController::class, 'stats']);
+    Route::get('/dashboard-charts', [DashboardController::class, 'charts']);
+    Route::get('/dashboard-tables', [DashboardController::class, 'tables']);
+    Route::get('/transaction-logs', [TransactionLogController::class, 'logs']);
+    Route::get('/transaction-logs-paginated', [TransactionLogController::class, 'logsPaginated']);
 
     Route::get('/products', [ProductController::class, 'products']);
     Route::get('/product-paginated', [ProductController::class, 'productPaginated']);

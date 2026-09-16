@@ -29,6 +29,8 @@ import ConfirmationService from 'primevue/confirmationservice';
 import Tag from 'primevue/tag';
 import Divider from 'primevue/divider';
 import FileUpload from 'primevue/fileupload';
+import Chart from 'primevue/chart';
+import DatePicker from 'primevue/datepicker';
 
 
 
@@ -74,6 +76,8 @@ createInertiaApp({
         app.component('Checkbox', Checkbox);
         app.component('CheckboxGroup', CheckboxGroup);
         app.component('FileUpload', FileUpload);
+        app.component('Chart', Chart);
+        app.component('DatePicker', DatePicker);
 
         // 🔥 REGISTER DIRECTIVES
         app.directive('ripple', Ripple);

@@ -24,6 +24,9 @@ export function baseDialog() {
       props: {
         modal: true,
         draggable: false,
+        dismissableMask: false,
+        closeOnEscape: false,
+        closable: true,
         header: titleHeader ?? ' ',
         position: position,
         style: { width: width },

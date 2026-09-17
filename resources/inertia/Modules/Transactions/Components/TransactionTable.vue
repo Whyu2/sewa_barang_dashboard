@@ -57,6 +57,9 @@ const confirmDelete = (id) => baseConfirmDialog({ message: 'Delete this transact
             <Column header="Tgl Perkiraan Pengembalian">
                 <template #body="{ data }">{{ formatDateID(data.expected_return_date) }}</template>
             </Column>
+            <Column header="Tgl Pengembalian">
+                <template #body="{ data }">{{ formatDateID(data.return_date) }}</template>
+            </Column>
             <Column header="Status">
                 <template #body="{ data }"><Tag :value="getStatusLabel(data.status)" :severity="getStatusSeverity(data.status)" /></template>
             </Column>

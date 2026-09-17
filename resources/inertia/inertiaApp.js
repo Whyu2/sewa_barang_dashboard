@@ -1,5 +1,5 @@
 import { createApp, h } from 'vue'
-import { createInertiaApp } from '@inertiajs/vue3'
+import { createInertiaApp, router } from '@inertiajs/vue3'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
@@ -13,7 +13,6 @@ import { Menubar } from "primevue";
 import './Assets/main.css';
 import { createPinia } from 'pinia';
 import { VueQueryPlugin } from '@tanstack/vue-query';
-import router from './Routers/index.js'
 import DialogService from 'primevue/dialogservice';
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
@@ -42,7 +41,9 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) });
         app.use(plugin);
         app.use(pinia);
-        app.use(router);
+        router.on('navigate', () => {
+            queryClient.invalidateQueries()
+        })
         app.use(DialogService);
         app.use(ToastService);
         app.use(ConfirmationService);

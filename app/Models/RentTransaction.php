@@ -29,6 +29,10 @@ class RentTransaction extends Model
     ];
 
     protected $casts = [
+        'product_id' => 'integer',
+        'region_id' => 'integer',
+        'qty' => 'integer',
+        'rent_price' => 'integer',
         'rent_date' => 'datetime',
         'expected_return_date' => 'datetime',
         'return_date' => 'datetime',

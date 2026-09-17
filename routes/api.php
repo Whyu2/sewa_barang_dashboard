@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/rent-transactions', [RentTransactionController::class, 'rentTransactions']);
     Route::get('/rent-transactions-paginated', [RentTransactionController::class, 'rentTransactionPaginated']);
+    Route::get('/rent-transaction/{id}', [RentTransactionController::class, 'rentTransactionShow']);
     Route::post('/rent-transaction', [RentTransactionController::class, 'rentTransactionStore']);
     Route::put('/rent-transaction/{id}', [RentTransactionController::class, 'rentTransactionUpdate']);
     Route::delete('/rent-transaction/{id}', [RentTransactionController::class, 'rentTransactionDestroy']);

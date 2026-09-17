@@ -27,10 +27,14 @@ class RentTransactionService
                     'qr_uuid' => 'Product not found',
                 ]);
             }
+            $data['region_id'] = (int)$data['region_id'];
+            $data['qty'] = (int)$data['qty'];
+            $data['rent_price'] = (int)$data['rent_price'];
             $tx = $this->repo->create([
-                ...$data,   
+                ...$data,
                 'product_id' => $product->id,
             ]);
+            $tx->load(['product','region']);
             \App\Models\TransactionLog::create([
                 'transaction_id' => $tx->id,
                 'product_id' => $product->id,
@@ -56,6 +60,11 @@ class RentTransactionService
         return $this->repo->paginate( $limit);
     }
 
+    public function find($id)
+    {
+        return $this->repo->find($id);
+    }
+
     public function destroy($id)
     {
         return $this->repo->destroy($id);
@@ -77,7 +86,11 @@ class RentTransactionService
                 }
             } catch (\Exception $e) {}
         }
+        if (isset($data['region_id'])) $data['region_id']=(int)$data['region_id'];
+        if (isset($data['qty'])) $data['qty']=(int)$data['qty'];
+        if (isset($data['rent_price'])) $data['rent_price']=(int)$data['rent_price'];
         $updated = $this->repo->update($data, $id);
+        $updated->load(['product','region']);
         if (isset($data['status']) && $old && $old->status !== $data['status']) {
             \App\Models\TransactionLog::create([
                 'transaction_id' => $updated->id,

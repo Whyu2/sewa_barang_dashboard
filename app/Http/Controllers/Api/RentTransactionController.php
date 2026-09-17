@@ -90,18 +90,34 @@ class RentTransactionController extends BaseController
                 'qr_uuid' => 'required|string',
                 'region_id' => 'required|integer',
                 'renter_name' => 'required|string',
-                'renter_phone' => 'required|string',
+                'renter_phone' => 'nullable|string|max:50',
                 'rent_date' => 'required|date',
-                'expected_return_date' => 'required|date',
+                'expected_return_date' => 'required|date|after_or_equal:rent_date',
                 'qty' => 'required|integer|min:1',
                 'rent_price' => 'required|integer',
+                'notes' => 'nullable|string',
+                'pickup_proof' => 'nullable|image|max:4096',
             ]);
+            if ($request->hasFile('pickup_proof')) {
+                $file = $request->file('pickup_proof');
+                $path = 'pickup_proofs/' . $file->hashName();
+                \Illuminate\Support\Facades\Storage::disk('public')->put($path, file_get_contents($file));
+                $data['pickup_proof_url'] = asset('storage/' . $path);
+            }
 
             $transaction = $this->service->createByQr($data);
             return $this->success($transaction, "Transaction created", 201);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), 422);
         }
+    }
+
+    #[OA\Get(path: "/rent-transaction/{id}", operationId: "getRentTransactionShow", tags: ["Transactions"], summary: "Detail transaksi", security: [["bearerAuth"=>[]]], parameters: [new OA\Parameter(name:"id", in:"path", required:true, schema: new OA\Schema(type:"integer"))], responses: [new OA\Response(response:200, description:"Berhasil"), new OA\Response(response:404, description:"Not found")])]
+    public function rentTransactionShow($id): \Illuminate\Http\JsonResponse
+    {
+        $tx = $this->service->find($id);
+        if (!$tx) return $this->error("Transaction not found", 404);
+        return $this->success($tx);
     }
 
     #[OA\Delete(

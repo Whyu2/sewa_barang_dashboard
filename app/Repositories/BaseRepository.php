@@ -38,6 +38,9 @@ abstract class BaseRepository
 
     public function destroy($id)
     {
-        return $this->model->where('id', $id)->delete();
+        // Hapus via instance model agar SoftDeletes ikut jalan pada model
+        // yang memakai trait tersebut (master); model tanpa trait tetap hard delete.
+        $record = $this->model->findOrFail($id);
+        return $record->delete();
     }
 }

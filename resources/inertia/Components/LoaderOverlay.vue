@@ -1,14 +1,16 @@
 
-
 <script setup>
 import ProgressSpinner from 'primevue/progressspinner'
 import { useIsFetching, useIsMutating } from '@tanstack/vue-query'
+import useAuthStore from '@/inertia/Modules/Auth/Stores/useAuthStore.js'
 const isFetching = useIsFetching()
 const isMutating = useIsMutating()
+const authStore = useAuthStore()
 </script>
 
+
 <template>
-    <div v-if="isFetching > 0 || isMutating > 0" class="overlay-loader">
+    <div v-if="!authStore.gateChecking && (isFetching > 0 || isMutating > 0)" class="overlay-loader">
         <ProgressSpinner style="width:50px;height:50px" />
     </div>
 </template>

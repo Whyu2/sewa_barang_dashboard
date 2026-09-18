@@ -25,6 +25,7 @@ onMounted(() => {
         <div class="flex justify-start">
             <p class="text-xl font-bold">Region</p>
         </div>
+        <p class="text-sm text-gray-500 mb-4">Kelola lokasi/wilayah penempatan stok barang.</p>
         <RegionTable />
     </DashboardLayout>
 </template>

@@ -41,7 +41,30 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) });
         app.use(plugin);
         app.use(pinia);
-        router.on('navigate', () => {
+        // Guard sinkron: tanpa token langsung ke /login sebelum halaman sempat render.
+        // Cek validitas token (basi/kadaluarsa) tetap via /me di DashboardLayout.
+        const isPublicPath = (url) => {
+            try {
+                const path = new URL(url, window.location.origin).pathname;
+                return path === '/login';
+            } catch {
+                return false;
+            }
+        };
+        const hasToken = () => !!localStorage.getItem('access_token');
+        router.on('before', (event) => {
+            if (!hasToken() && !isPublicPath(event.detail.visit.url.href)) {
+                event.preventDefault();
+                router.visit('/login');
+            }
+        });
+        // Pengaman tambahan: bila user menghapus token lalu menekan back,
+        // halaman dari cache tetap langsung dilempar ke /login.
+        router.on('navigate', (event) => {
+            if (!hasToken() && !isPublicPath(event.detail.page.url)) {
+                router.visit('/login');
+                return;
+            }
             queryClient.invalidateQueries()
         })
         app.use(DialogService);

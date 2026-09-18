@@ -14,6 +14,7 @@ import { formatIDR } from '@/inertia/Utils/formatIDR.js';
 import { formatDateID } from '@/inertia/Utils/formatDate.js';
 import { getStatusSeverity, getStatusLabel } from '@/inertia/Utils/statusBadge.js';
 import { formatTRX } from '@/inertia/Utils/formatTRX.js';
+import { formatDurationDays } from '@/inertia/Utils/rentalDuration.js';
 
 const toast = useToast();
 const { useFetchTransactionsPaginated } = useQuery();
@@ -56,6 +57,9 @@ const confirmDelete = (id) => baseConfirmDialog({ message: 'Delete this transact
             </Column>
             <Column header="Tgl Perkiraan Pengembalian">
                 <template #body="{ data }">{{ formatDateID(data.expected_return_date) }}</template>
+            </Column>
+            <Column header="Lama Sewa" style="width:7rem">
+                <template #body="{ data }">{{ formatDurationDays(data.rent_date, data.expected_return_date) }}</template>
             </Column>
             <Column header="Tgl Pengembalian">
                 <template #body="{ data }">{{ formatDateID(data.return_date) }}</template>

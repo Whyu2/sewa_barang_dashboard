@@ -19,7 +19,12 @@ const topProductsData = computed(() => {
     const p = charts.value?.topProducts || [];
     return { labels: p.map(x=>x.product), datasets: [{ label: 'Jumlah Transaksi', data: p.map(x=>x.trx_count), backgroundColor: '#60a5fa' }] };
 });
-const barOptions = { responsive:true, indexAxis:'y', scales:{ x:{ beginAtZero:true, ticks:{ precision:0 } } }, plugins:{ legend:{ display:false } } };
+const barOptions = { responsive:true, animation:{ duration:1000 }, indexAxis:'y', scales:{ x:{ beginAtZero:true, ticks:{ precision:0 } } }, plugins:{ legend:{ display:false } } };
+const columnOptions = { responsive:true, animation:{ duration:1000 }, scales:{ y:{ beginAtZero:true, ticks:{ precision:0 } } }, plugins:{ legend:{ display:false } } };
+const pieOptions = { responsive:true, animation:{ duration:1000 }, plugins:{ legend:{ position:'bottom' } } };
+// Chart hanya di-mount setelah data tiba: mount = data final -> animasi awal
+// Chart.js selalu jalan mulus sekali, tanpa re-init berulang dari data kosong.
+const chartsReady = computed(() => !!charts.value && 'topProducts' in charts.value);
 const statusData = computed(() => {
     const s = charts.value?.statusDist || [];
     return { labels: s.map(x=>getStatusLabel(x.status)), datasets: [{ data: s.map(x=>x.count), backgroundColor: s.map(x=>getStatusColor(x.status)) }] };
@@ -41,20 +46,23 @@ const regionData = computed(() => {
             <StatsCard title="Pengembalian Telat" :value="stats?.overdue ?? 0" icon="pi pi-exclamation-triangle" />
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+        <div v-if="chartsReady" class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
             <div class="bg-white shadow rounded p-4"><p class="font-semibold mb-2">Top 5 Produk Terbanyak Disewa</p><Chart type="bar" :data="topProductsData" :options="barOptions" /><p v-if="!topProductsData.labels.length" class="text-sm text-gray-400 text-center mt-2">Tidak ada transaksi</p></div>
-            <div class="bg-white shadow rounded p-4"><p class="font-semibold mb-2">Distribusi Status</p><Chart type="doughnut" :data="statusData" /></div>
-            <div class="bg-white shadow rounded p-4"><p class="font-semibold mb-2">Revenue per Region</p><Chart type="bar" :data="regionData" /></div>
+            <div class="bg-white shadow rounded p-4"><p class="font-semibold mb-2">Distribusi Status</p><Chart type="doughnut" :data="statusData" :options="pieOptions" /></div>
+            <div class="bg-white shadow rounded p-4"><p class="font-semibold mb-2">Revenue per Region</p><Chart type="bar" :data="regionData" :options="columnOptions" /></div>
+        </div>
+        <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+            <div v-for="i in 3" :key="i" class="bg-white shadow rounded p-4"><div class="h-48 rounded bg-gray-100 animate-pulse" /></div>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
             <div class="bg-white shadow rounded p-4">
                 <p class="font-semibold mb-2">Transaksi Terbaru</p>
-                <DataTable :value="tables?.recent || []" size="small"><Column header="TRX ID" style="width:6rem"><template #body="{data}"><span class="font-mono text-xs">{{ formatTRX(data.id) }}</span></template></Column><Column header="Produk"><template #body="{data}">{{ data.product?.name }}</template></Column><Column header="Penyewa" field="renter_name"/><Column header="Tgl"><template #body="{data}">{{ formatDateID(data.rent_date) }}</template></Column><Column header="Status"><template #body="{data}"><Tag :value="getStatusLabel(data.status)" :severity="getStatusSeverity(data.status)"/></template></Column></DataTable>
+                <DataTable :value="tables?.recent || []" size="small"><Column header="TRX ID" style="width:6rem"><template #body="{data}"><span class="font-mono text-xs">{{ formatTRX(data.id) }}</span></template></Column><Column header="Produk"><template #body="{data}">{{ data.product?.name }}</template></Column><Column header="Penyewa" field="renter_name"/><Column header="Tgl Sewa"><template #body="{data}">{{ formatDateID(data.rent_date) }}</template></Column><Column header="Status"><template #body="{data}"><Tag :value="getStatusLabel(data.status)" :severity="getStatusSeverity(data.status)"/></template></Column></DataTable>
             </div>
             <div class="bg-white shadow rounded p-4">
                 <p class="font-semibold mb-2">Pengembalian Telat ({{ tables?.overdue?.length || 0 }})</p>
-                <DataTable :value="tables?.overdue || []" size="small"><Column header="TRX ID" style="width:6rem"><template #body="{data}"><span class="font-mono text-xs">{{ formatTRX(data.id) }}</span></template></Column><Column header="Produk"><template #body="{data}">{{ data.product?.name }}</template></Column><Column header="Jatuh Tempo"><template #body="{data}">{{ formatDateID(data.expected_return_date) }} ({{ Math.floor(data.days_overdue) }} hari)</template></Column><Column header="Status"><template #body="{data}"><Tag :value="getStatusLabel(data.status)" :severity="getStatusSeverity(data.status)"/></template></Column></DataTable>
+                <DataTable :value="tables?.overdue || []" size="small"><Column header="TRX ID" style="width:6rem"><template #body="{data}"><span class="font-mono text-xs">{{ formatTRX(data.id) }}</span></template></Column><Column header="Produk"><template #body="{data}">{{ data.product?.name }}</template></Column><Column header="Tgl Perkiraan Pengembalian"><template #body="{data}">{{ formatDateID(data.expected_return_date) }}</template></Column><Column header="Status"><template #body="{data}"><Tag :value="getStatusLabel(data.status)" :severity="getStatusSeverity(data.status)"/></template></Column></DataTable>
             </div>
         </div>
     </DashboardLayout>

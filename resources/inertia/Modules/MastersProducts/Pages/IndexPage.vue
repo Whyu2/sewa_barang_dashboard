@@ -24,6 +24,7 @@ onMounted(() => {
         <div class="flex justify-start ">
             <p class="text-xl font-bold">Product</p>
         </div>
+        <p class="text-sm text-gray-500 mb-4">Kelola katalog barang sewaan beserta foto, QR, dan stok per region.</p>
         <ProductTable />
     </DashboardLayout>
 </template>

@@ -8,7 +8,7 @@ export const login = (payload ) => {
 
 export const me = ( ) => {
     return useAxios()
-        .post(`/me`)
+        .get(`/me`)
         .then(res => res.data.data);
 };
 

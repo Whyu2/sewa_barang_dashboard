@@ -49,7 +49,7 @@ const handleOpenDialogUpdate = (category) => {
 }
 const confirmDelete = (id) => {
     baseConfirmDialog({
-        message: 'Do you want to delete this record?',
+        message: 'Arsipkan kategori ini? Data disembunyikan tapi riwayat transaksi yang memakainya tetap aman.',
         header: 'Delete Confirmation',
         acceptLabel: 'Delete',
         onAccept: () => {

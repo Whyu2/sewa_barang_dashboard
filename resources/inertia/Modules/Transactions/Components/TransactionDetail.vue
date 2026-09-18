@@ -3,6 +3,7 @@ import { formatIDR } from '@/inertia/Utils/formatIDR.js';
 import { formatDateID } from '@/inertia/Utils/formatDate.js';
 import { getStatusSeverity, getStatusLabel } from '@/inertia/Utils/statusBadge.js';
 import { formatTRX } from '@/inertia/Utils/formatTRX.js';
+import { formatDurationDays } from '@/inertia/Utils/rentalDuration.js';
 const props = defineProps({ transaction: { type: Object, required: true } });
 </script>
 <template>
@@ -53,6 +54,7 @@ const props = defineProps({ transaction: { type: Object, required: true } });
                 <div class="p-3">
                     <p class="text-xs text-gray-500 uppercase tracking-wide">Tgl Kembali (Rencana)</p>
                     <p class="font-medium mt-1">{{ formatDateID(transaction.expected_return_date) }}</p>
+                    <p class="text-xs text-gray-500 mt-1">Lama sewa: {{ formatDurationDays(transaction.rent_date, transaction.expected_return_date) }}</p>
                 </div>
             </div>
             <div class="grid grid-cols-2 divide-x divide-gray-300">
@@ -74,12 +76,12 @@ const props = defineProps({ transaction: { type: Object, required: true } });
         <div class="grid grid-cols-2 gap-4">
             <div class="rounded-lg border border-gray-300 p-3">
                 <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Pickup Proof</p>
-                <img v-if="transaction.pickup_proof_url" :src="transaction.pickup_proof_url" alt="Pickup Proof" class="rounded-lg w-full max-h-64 object-cover border border-gray-300" />
+                <Image v-if="transaction.pickup_proof_url" :src="transaction.pickup_proof_url" alt="Pickup Proof" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
                 <span v-else class="text-gray-400 text-xs">- tidak ada -</span>
             </div>
             <div class="rounded-lg border border-gray-300 p-3">
                 <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Return Proof</p>
-                <img v-if="transaction.return_proof_url" :src="transaction.return_proof_url" alt="Return Proof" class="rounded-lg w-full max-h-64 object-cover border border-gray-300" />
+                <Image v-if="transaction.return_proof_url" :src="transaction.return_proof_url" alt="Return Proof" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
                 <span v-else class="text-gray-400 text-xs">- tidak ada -</span>
             </div>
         </div>

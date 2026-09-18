@@ -63,7 +63,7 @@ const handleOpenDialogDetail = (product) => {
 }
 const confirmDelete = (id) => {
     baseConfirmDialog({
-        message: 'Do you want to delete this record?',
+        message: 'Arsipkan produk ini? Data disembunyikan tapi riwayat transaksi yang memakainya tetap aman.',
         header: 'Delete Confirmation',
         acceptLabel: 'Delete',
         onAccept: () => {
@@ -81,7 +81,17 @@ const confirmDelete = (id) => {
         </div>
         <DataTable v-if="product" :value="product.data" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 50rem" show-gridlines>
             <Column field="name" header="Name" style="width: 25%"></Column>
-            <Column field="category_name" header="Category" style="width: 25%"></Column>
+            <Column field="category_name" header="Category" style="width: 20%"></Column>
+            <Column header="Stok per Region" style="width: 30%">
+                <template #body="slotProps">
+                    <div v-if="slotProps.data.product_region?.length" class="flex flex-col gap-1">
+                        <span v-for="region in slotProps.data.product_region" :key="region.region_id" class="text-xs border border-gray-300 rounded px-2 py-1 flex justify-between gap-2">
+                            <span>{{ region.region_name }}</span><span class="font-medium">{{ region.qty }}</span>
+                        </span>
+                    </div>
+                    <span v-else class="text-gray-400 text-xs">-</span>
+                </template>
+            </Column>
             <Column field="action" header="Action">
                 <template #body="slotProps">
                     <Button icon="pi pi-pencil" rounded text size="small" @click="handleOpenDialogUpdate(slotProps.data)"/>

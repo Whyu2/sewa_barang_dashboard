@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import useMutation from '@/inertia/Modules/Transactions/Composables/UseMutation.js';
 import useInvalidateQuery from '@/inertia/Modules/Transactions/Composables/UseInvalidateQuery.js';
 import { isLate } from '@/inertia/Utils/isOverdue.js';
+import { addDaysISO, diffDays } from '@/inertia/Utils/rentalDuration.js';
 
 const props = defineProps({ transaction: { type: Object, required: true } });
 const toast = useToast();
@@ -29,6 +30,7 @@ const initialValues = ref({
     qty: 1,
     rent_price: 0,
     rent_date: null,
+    rental_duration_days: 1,
     expected_return_date: null,
     return_date: null,
     status: null,
@@ -47,6 +49,7 @@ const resolver = yupResolver(
         qty: yup.number().min(1).required(),
         rent_price: yup.number().min(0).required(),
         rent_date: yup.string().required(),
+        rental_duration_days: yup.number().typeError('Durasi wajib diisi').min(1, 'Minimal 1 hari').required('Sewa berapa lama wajib diisi'),
         expected_return_date: yup.string().required(),
         status: yup.string().oneOf(['rented','returned','overdue']).required(),
         notes: yup.string().nullable(),
@@ -56,39 +59,73 @@ const resolver = yupResolver(
 
 const fileReturn = ref(null);
 const previewReturn = ref(null);
+const removeReturnProof = ref(false);
 
 watch(() => props.transaction, (t) => {
     if (!t) return;
+    const rent = t.rent_date ? t.rent_date.substring(0,10) : null;
+    const expected = t.expected_return_date ? t.expected_return_date.substring(0,10) : null;
+    const n = (rent && expected) ? diffDays(rent, expected) : null;
     initialValues.value = {
         renter_name: t.renter_name ?? null,
         renter_phone: t.renter_phone ?? null,
         qty: t.qty ?? 1,
         rent_price: t.rent_price ?? 0,
-        rent_date: t.rent_date ? t.rent_date.substring(0,10) : null,
-        expected_return_date: t.expected_return_date ? t.expected_return_date.substring(0,10) : null,
+        rent_date: rent,
+        rental_duration_days: (n !== null && n >= 1) ? n : 1,
+        expected_return_date: expected,
         return_date: t.return_date ? t.return_date.substring(0,10) : null,
         status: t.status ?? 'rented',
         notes: t.notes ?? null,
     };
     previewReturn.value = t.return_proof_url ?? null;
+    fileReturn.value = null;
+    removeReturnProof.value = false;
 }, { immediate: true });
+
+// Hitung ulang expected_return_date dari rent_date + durasi (hari)
+function recalcExpected(form) {
+    if (!form) return;
+    const rent = form.rent_date?.value;
+    const days = Number(form.rental_duration_days?.value);
+    if (!rent || !days || days < 1) return;
+    form.expected_return_date.value = addDaysISO(rent, days);
+}
 function onFileSelectReturn(e) {
     const f = e.files[0];
     if (!f) return;
     fileReturn.value = f;
+    removeReturnProof.value = false;
     const reader = new FileReader();
     reader.onload = (ev) => previewReturn.value = ev.target.result;
     reader.readAsDataURL(f);
 }
-function clearReturn() { fileReturn.value = null; previewReturn.value = props.transaction.return_proof_url ?? null; }
+// X pada foto baru = batalkan pilihan; X pada foto lama = tandai untuk dihapus permanen
+function clearReturn() {
+    if (fileReturn.value) {
+        fileReturn.value = null;
+        previewReturn.value = props.transaction.return_proof_url ?? null;
+        removeReturnProof.value = false;
+    } else {
+        previewReturn.value = null;
+        removeReturnProof.value = true;
+    }
+}
+function undoRemoveReturn() { removeReturnProof.value = false; previewReturn.value = props.transaction.return_proof_url ?? null; }
 
 const onSubmit = ({ valid, values }) => {
     if (!valid) return;
+    // Pastikan expected selalu hasil kalkulasi (field disabled tidak bisa diubah manual)
+    const autoExpected = (values.rent_date && Number(values.rental_duration_days) >= 1)
+        ? addDaysISO(values.rent_date, Number(values.rental_duration_days))
+        : values.expected_return_date;
+    values = { ...values, expected_return_date: autoExpected };
     let submitStatus = values.status;
     if (values.status === 'returned' && isLate(values.return_date, values.expected_return_date)) {
         submitStatus = 'overdue';
     }
     const isReturnedLike = submitStatus === 'returned' || submitStatus === 'overdue';
+    const wantRemoveProof = removeReturnProof.value && !fileReturn.value;
     if (fileReturn.value) {
         const fd = new FormData();
         Object.entries(values).forEach(([k, v]) => {
@@ -103,6 +140,7 @@ const onSubmit = ({ valid, values }) => {
         updateTx({ id: props.transaction.id, payload: fd });
     } else {
         const payload = { ...values, status: submitStatus };
+        if (wantRemoveProof) payload.remove_return_proof = true;
         if (!isReturnedLike) delete payload.return_date;
         if (payload.return_date === '' || payload.return_date === undefined) payload.return_date = null;
         if (payload.notes === '') payload.notes = null;
@@ -145,12 +183,18 @@ const onSubmit = ({ valid, values }) => {
             </div>
             <div class="mb-2">
                 <label>Rent Date</label>
-                <InputText name="rent_date" type="date" class="w-full" />
+                <InputText name="rent_date" type="date" class="w-full" @change="() => recalcExpected($form)" />
                 <Message v-if="$form.rent_date?.invalid" severity="error" size="small" variant="simple">{{ $form.rent_date.error?.message }}</Message>
             </div>
             <div class="mb-2">
+                <label>Sewa Berapa Lama? (hari)</label>
+                <InputNumber name="rental_duration_days" class="w-full" :min="1" showButtons suffix=" hari" @update:modelValue="() => recalcExpected($form)" />
+                <Message v-if="$form.rental_duration_days?.invalid" severity="error" size="small" variant="simple">{{ $form.rental_duration_days.error?.message }}</Message>
+            </div>
+            <div class="mb-2">
                 <label>Expected Return Date</label>
-                <InputText name="expected_return_date" type="date" class="w-full" />
+                <InputText name="expected_return_date" type="date" class="w-full opacity-50" disabled />
+                <small class="text-gray-400">Otomatis: rent date + lama sewa</small>
                 <Message v-if="$form.expected_return_date?.invalid" severity="error" size="small" variant="simple">{{ $form.expected_return_date.error?.message }}</Message>
             </div>
             <div class="mb-2">
@@ -169,8 +213,12 @@ const onSubmit = ({ valid, values }) => {
             <div v-if="$form.status?.value === 'returned'" class="mb-2">
                 <label class="block mb-1">Return Proof (opsional)</label>
                 <div v-if="previewReturn" class="flex items-center gap-2 mb-2">
-                    <img :src="previewReturn" alt="Return Proof" class="rounded-lg w-full max-h-48 object-cover border border-gray-300" />
-                    <Button @click="clearReturn" icon="pi pi-times" rounded variant="outlined" severity="danger" />
+                    <Image :src="previewReturn" alt="Return Proof" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
+                    <Button @click="clearReturn" icon="pi pi-times" rounded variant="outlined" severity="danger" size="small" v-tooltip.top="'Hapus foto'" />
+                </div>
+                <div v-else-if="removeReturnProof" class="flex items-center gap-2 mb-2">
+                    <small class="text-red-500">Foto akan dihapus saat Update.</small>
+                    <Button @click="undoRemoveReturn" label="Batalkan" size="small" severity="secondary" variant="outlined" />
                 </div>
                 <FileUpload mode="basic" @select="onFileSelectReturn" customUpload auto severity="secondary" accept="image/*" class="p-button-outlined" chooseLabel="Pilih Foto" />
             </div>
@@ -181,7 +229,7 @@ const onSubmit = ({ valid, values }) => {
             </div>
             <div v-if="transaction.pickup_proof_url" class="mt-3">
                 <label class="block mb-1 font-semibold text-sm">Pickup Proof (read-only)</label>
-                <img :src="transaction.pickup_proof_url" alt="Pickup Proof" class="rounded-lg w-full max-h-48 object-cover border border-gray-300" />
+                <Image :src="transaction.pickup_proof_url" alt="Pickup Proof" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
             </div>
             <div class="flex justify-end">
                 <Button type="submit" label="Update" icon="pi pi-send" class="mt-4" />

@@ -25,6 +25,7 @@ onMounted(() => {
         <div class="flex justify-start">
             <p class="text-xl font-bold">Category</p>
         </div>
+        <p class="text-sm text-gray-500 mb-4">Kelola kategori barang sewaan — kategori dipakai saat menambah produk.</p>
         <CategoryTable />
     </DashboardLayout>
 </template>

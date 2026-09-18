@@ -1,17 +1,36 @@
     <script setup>
-    import { ref } from "vue";
+    import { computed, onUnmounted, ref, watch } from "vue";
     import AppBreadcrumb from "@/inertia/Components/AppBreadcrumb.vue";
     import {Link, router} from '@inertiajs/vue3';
     import confirmDialog from "@/inertia/Composables/ConfirmDialog.js";
     import InertiaApp from "@/inertia/inertiaApp.vue";
     import useMutation from "@/inertia/Modules/Auth/Composables/UseMutation.js";
+    import useAuthQuery from "@/inertia/Modules/Auth/Composables/useQuery.js";
     import useAuthStore from "@/inertia/Modules/Auth/Stores/useAuthStore.js";
     import {useToast} from "primevue/usetoast";
+    import ProgressSpinner from 'primevue/progressspinner';
 
     const toast = useToast();
     const {baseConfirmDialog} = confirmDialog();
     const {useLogout} = useMutation();
     const authStore = useAuthStore();
+
+    // Verifikasi sesi ke server: selama belum ada data user yang valid,
+    // tampilkan loading netral agar konten dashboard tak sempat terlihat.
+    // (Hasil di-cache 5 menit, jadi tidak request ulang tiap pindah halaman.)
+    const { useFetchMe } = useAuthQuery();
+    const meQuery = useFetchMe();
+    const checking = computed(() => meQuery.isPending.value);
+    // Beri tahu LoaderOverlay global agar sembunyi selama gate aktif (single loader).
+    watch(checking, (v) => authStore.setGateChecking(v), { immediate: true });
+    onUnmounted(() => authStore.setGateChecking(false));
+    // Pengaman: bila verifikasi gagal dan token sudah dibersihkan interceptor 401,
+    // pastikan user dilempar ke /login meski interceptor terlewat.
+    watch(meQuery.isError, (failed) => {
+        if (failed && !localStorage.getItem('access_token')) {
+            router.visit('/login');
+        }
+    });
 
     const {mutate: logout} = useLogout({
             onSuccess:async () => {
@@ -81,6 +100,11 @@
     </script>
     <template>
         <inertiaApp>
+        <div v-if="checking" class="flex flex-col items-center justify-center gap-3" style="min-height: 60vh">
+            <ProgressSpinner style="width:50px;height:50px" />
+            <p class="text-sm text-gray-500">Memverifikasi sesi...</p>
+        </div>
+        <template v-else>
         <div class="card">
                 <Menubar :model="items">
                     <template #item="{ item, props, hasSubmenu, root }">
@@ -116,6 +140,7 @@
 
                 <slot />
             </div>
+        </template>
         </inertiaApp>
 
     </template>

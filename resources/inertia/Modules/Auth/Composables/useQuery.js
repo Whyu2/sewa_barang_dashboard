@@ -6,7 +6,8 @@ const useQuery = () => {
     useQueryTanstack({
       queryKey: ['fetchMe'],
       queryFn: () => me(),
-      placeholderData: [],
+      retry: false,
+      staleTime: 5 * 60 * 1000,
     });
   return {
       useFetchMe,

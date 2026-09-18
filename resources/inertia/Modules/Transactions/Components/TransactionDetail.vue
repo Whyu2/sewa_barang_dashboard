@@ -71,6 +71,16 @@ const props = defineProps({ transaction: { type: Object, required: true } });
                 <p class="text-xs text-gray-500 uppercase tracking-wide">Notes</p>
                 <p class="font-medium mt-1 whitespace-pre-wrap break-words">{{ transaction.notes ?? '-' }}</p>
             </div>
+            <div class="grid grid-cols-2 divide-x divide-gray-300">
+                <div class="p-3">
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Dibuat Oleh</p>
+                    <p class="font-medium mt-1">{{ transaction.creator?.name ?? '-' }}</p>
+                </div>
+                <div class="p-3">
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Region Pembuat</p>
+                    <p class="font-medium mt-1">{{ transaction.creator?.region?.name ?? transaction.region?.name ?? '-' }}</p>
+                </div>
+            </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">

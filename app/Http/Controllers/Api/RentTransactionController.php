@@ -29,9 +29,12 @@ class RentTransactionController extends BaseController
             new OA\Response(response: 401, description: "Unauthenticated")
         ]
     )]
-    public function rentTransactions(): \Illuminate\Http\JsonResponse
+    public function rentTransactions(Request $request): \Illuminate\Http\JsonResponse
     {
-        return $this->success($this->service->all());
+        return $this->success($this->service->allFiltered(
+            $request->region_id,
+            $this->service->resolveCreatedBy($request->mine, $request->created_by),
+        ));
     }
 
     #[OA\Get(
@@ -51,7 +54,11 @@ class RentTransactionController extends BaseController
     )]
     public function rentTransactionPaginated(Request $request): \Illuminate\Http\JsonResponse
     {
-        return $this->success($this->service->paginate($request->limit));
+        return $this->success($this->service->paginateFiltered(
+            $request->limit,
+            $request->region_id,
+            $this->service->resolveCreatedBy($request->mine, $request->created_by),
+        ));
     }
 
     #[OA\Post(

@@ -15,6 +15,7 @@ class RentTransaction extends Model
     protected $fillable = [
         'product_id',
         'region_id',
+        'created_by',
         'renter_name',
         'renter_phone',
         'rent_date',
@@ -31,6 +32,7 @@ class RentTransaction extends Model
     protected $casts = [
         'product_id' => 'integer',
         'region_id' => 'integer',
+        'created_by' => 'integer',
         'qty' => 'integer',
         'rent_price' => 'integer',
         'rent_date' => 'datetime',
@@ -46,5 +48,10 @@ class RentTransaction extends Model
     public function region()
     {
         return $this->belongsTo(Region::class);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

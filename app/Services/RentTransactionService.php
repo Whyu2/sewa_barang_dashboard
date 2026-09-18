@@ -30,11 +30,14 @@ class RentTransactionService
             $data['region_id'] = (int)$data['region_id'];
             $data['qty'] = (int)$data['qty'];
             $data['rent_price'] = (int)$data['rent_price'];
+            // Pembuat diisi server-side dari user login, abaikan input client
+            unset($data['created_by']);
             $tx = $this->repo->create([
                 ...$data,
                 'product_id' => $product->id,
+                'created_by' => auth()->id(),
             ]);
-            $tx->load(['product','region']);
+            $tx->load(['product','region','creator.region']);
             \App\Models\TransactionLog::create([
                 'transaction_id' => $tx->id,
                 'product_id' => $product->id,
@@ -58,6 +61,24 @@ class RentTransactionService
     public function paginate($limit)
     {
         return $this->repo->paginate( $limit);
+    }
+
+    public function allFiltered($regionId = null, $createdBy = null)
+    {
+        return $this->repo->allFiltered($regionId, $createdBy);
+    }
+
+    public function paginateFiltered($limit, $regionId = null, $createdBy = null)
+    {
+        return $this->repo->paginateFiltered($limit, $regionId, $createdBy);
+    }
+
+    public function resolveCreatedBy($mine, $createdBy)
+    {
+        if ($mine && (string) $mine !== '0' && filter_var($mine, FILTER_VALIDATE_BOOLEAN)) {
+            return auth()->id();
+        }
+        return $createdBy;
     }
 
     public function find($id)
@@ -89,8 +110,10 @@ class RentTransactionService
         if (isset($data['region_id'])) $data['region_id']=(int)$data['region_id'];
         if (isset($data['qty'])) $data['qty']=(int)$data['qty'];
         if (isset($data['rent_price'])) $data['rent_price']=(int)$data['rent_price'];
+        // Creator tidak boleh diubah via update
+        unset($data['created_by']);
         $updated = $this->repo->update($data, $id);
-        $updated->load(['product','region']);
+        $updated->load(['product','region','creator']);
         if (isset($data['status']) && $old && $old->status !== $data['status']) {
             \App\Models\TransactionLog::create([
                 'transaction_id' => $updated->id,

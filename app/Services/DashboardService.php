@@ -11,7 +11,7 @@ use App\Models\ProductLog;
 
 class DashboardService
 {
-    public function getStats($from = null, $to = null)
+    public function getStats($from = null, $to = null, $regionId = null, $createdBy = null)
     {
         if ($from==='undefined') $from=null;
         if ($to==='undefined') $to=null;
@@ -21,6 +21,8 @@ class DashboardService
         $txQuery = RentTransaction::query();
         if ($fromDate) $txQuery->where('rent_date', '>=', $fromDate);
         if ($toDate) $txQuery->where('rent_date', '<=', $toDate);
+        if ($regionId) $txQuery->where('region_id', (int) $regionId);
+        if ($createdBy) $txQuery->where('created_by', (int) $createdBy);
 
         return [
             'totalProducts' => Product::count(),
@@ -69,16 +71,18 @@ class DashboardService
         ];
     }
 
-    public function getTables($from = null, $to = null)
+    public function getTables($from = null, $to = null, $regionId = null, $createdBy = null)
     {
         if ($from==='undefined') $from=null;
         if ($to==='undefined') $to=null;
         $fromDate = $from ? Carbon::parse($from)->startOfDay() : null;
         $toDate = $to ? Carbon::parse($to)->endOfDay() : null;
-        $recentQuery = RentTransaction::with(['product','region'])->orderBy('rent_date','desc');
-        $overdueQuery = RentTransaction::with(['product','region'])->where('status','overdue')->orderBy('expected_return_date','asc');
+        $recentQuery = RentTransaction::with(['product','region','creator.region'])->orderBy('rent_date','desc');
+        $overdueQuery = RentTransaction::with(['product','region','creator.region'])->where('status','overdue')->orderBy('expected_return_date','asc');
         if ($fromDate) { $recentQuery->where('rent_date','>=',$fromDate); $overdueQuery->where('rent_date','>=',$fromDate); }
         if ($toDate) { $recentQuery->where('rent_date','<=',$toDate); $overdueQuery->where('rent_date','<=',$toDate); }
+        if ($regionId) { $recentQuery->where('region_id',(int)$regionId); $overdueQuery->where('region_id',(int)$regionId); }
+        if ($createdBy) { $recentQuery->where('created_by',(int)$createdBy); $overdueQuery->where('created_by',(int)$createdBy); }
         $recent = $recentQuery->limit(5)->get();
         $overdue = $overdueQuery->limit(5)->get()->map(function($r){ $r->days_overdue = (int) Carbon::parse($r->expected_return_date)->diffInDays(now()); return $r; });
         return ['recent' => $recent, 'overdue' => $overdue];

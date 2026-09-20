@@ -1,0 +1,56 @@
+<?php
+
+
+namespace App\Services;
+
+use Illuminate\Support\Facades\DB;
+use App\Repositories\Interface\UserRepositoryInterface;
+use Illuminate\Support\Facades\Hash;
+
+class UserService
+{
+    public function __construct(
+        protected UserRepositoryInterface $repo
+    ) {}
+
+    public function create(array $data)
+    {
+        $user = $this->repo->create([
+            'region_id' => (int)$data['region_id'],
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'role' => $data['role'],
+        ]);
+
+        return  $user;
+    }
+
+    public function all()
+    {
+        return $this->repo->all();
+    }
+
+    public function paginate($limit)
+    {
+        return $this->repo->paginate($limit);
+    }
+
+    public function destroy($id)
+    {
+        return $this->repo->destroy($id);
+    }
+
+    public function update(array $data, $id)
+    {
+        if (isset($data['password']) && $data['password'] !== null && $data['password'] !== '') {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
+        if (isset($data['region_id'])) {
+            $data['region_id'] = (int)$data['region_id'];
+        }
+        return $this->repo->update($data, $id);
+    }
+}

@@ -5,8 +5,8 @@ import { Form } from '@primevue/forms';
 import { yupResolver } from '@primevue/forms/resolvers/yup';
 import * as yup from "yup";
 import useMutation from "@/inertia/Modules/Auth/Composables/UseMutation.js";
-import InertiaApp from "@/inertia/inertiaApp.vue";
 import useAuthStore from "@/inertia/Modules/Auth/Stores/useAuthStore.js";
+import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 import { router } from '@inertiajs/vue3'
 
 
@@ -18,8 +18,12 @@ const {mutate: login} = useLogin({
         onSuccess:async (res) => {
             authStore.setIsAuthenticated(res.token);
             router.visit('/')
-            toast.add({ severity: 'success', summary: 'Success', life: 2500 });
-        }
+            toast.add({ severity: 'success', summary: 'Login berhasil', life: 2500 });
+        },
+        onError: (error) => {
+            const { message, detailText } = parseApiError(error, 'Login gagal');
+            toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
+        },
     }
 )
 
@@ -31,8 +35,8 @@ const initialValues = ref({
 
 const resolver = yupResolver(
     yup.object({
-        email: yup.string().required(),
-        password: yup.string().required(),
+        email: yup.string().email('Email tidak valid').required('Email wajib diisi'),
+        password: yup.string().required('Password wajib diisi'),
     })
 );
 
@@ -52,12 +56,11 @@ const onFormSubmit = ({ valid, values }) => {
 </script>
 
 <template>
-    <inertiaApp>
-    <div class="card">
+    <div class="card w-full">
         <Form v-slot="$form" :initialValues="initialValues" :resolver="resolver" @submit="onFormSubmit">
-            <div class="mb-2">
-                <label for="email">Email</label>
-                    <InputText name="email" placeholder="Email"     class="w-full" />
+            <div class="mb-3">
+                <label for="email" class="block mb-1">Email</label>
+                    <InputText name="email" type="email" placeholder="nama@example.com" class="w-full" />
                     <Message
                         v-if="$form.email?.invalid"
                         severity="error"
@@ -68,9 +71,9 @@ const onFormSubmit = ({ valid, values }) => {
                     </Message>
             </div>
 
-            <div class="mb-2">
-                <label for="password">Password</label>
-                <InputText name="password" placeholder="Password" class="w-full" />
+            <div class="mb-3">
+                <label for="password" class="block mb-1">Password</label>
+                <Password name="password" placeholder="Password" class="w-full" inputClass="w-full" toggleMask :feedback="false" />
                 <Message
                     v-if="$form.password?.invalid"
                     severity="error"
@@ -81,9 +84,8 @@ const onFormSubmit = ({ valid, values }) => {
                 </Message>
             </div>
             <div class="flex justify-end">
-                <Button type="submit" label="Submit" icon="pi pi-send" class="mt-4" />
+                <Button type="submit" label="Login" icon="pi pi-sign-in" class="mt-2 w-full" />
             </div>
         </Form>
     </div>
-    </inertiaApp>
 </template>

@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
+use App\Enums\UserRole;
 use App\Repositories\Interface\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,7 +21,7 @@ class UserService
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => $data['role'],
+            'role' => $data['role'] instanceof UserRole ? $data['role']->value : $data['role'],
         ]);
 
         return  $user;
@@ -38,6 +39,13 @@ class UserService
 
     public function destroy($id)
     {
+        $user = $this->repo->find($id);
+        if (! $user) {
+            throw new \Exception("User tidak ditemukan");
+        }
+        if ($user->role === UserRole::Admin) {
+            throw new \Exception("User dengan role admin tidak dapat dihapus");
+        }
         return $this->repo->destroy($id);
     }
 
@@ -50,6 +58,9 @@ class UserService
         }
         if (isset($data['region_id'])) {
             $data['region_id'] = (int)$data['region_id'];
+        }
+        if (isset($data['role']) && $data['role'] instanceof UserRole) {
+            $data['role'] = $data['role']->value;
         }
         return $this->repo->update($data, $id);
     }

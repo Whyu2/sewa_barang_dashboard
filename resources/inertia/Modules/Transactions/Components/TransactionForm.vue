@@ -8,6 +8,7 @@ import useMutation from '@/inertia/Modules/Transactions/Composables/UseMutation.
 import useInvalidateQuery from '@/inertia/Modules/Transactions/Composables/UseInvalidateQuery.js';
 import { isLate } from '@/inertia/Utils/isOverdue.js';
 import { addDaysISO, diffDays } from '@/inertia/Utils/rentalDuration.js';
+import { parseApiError } from '@/inertia/Utils/parseApiError.js';
 
 const props = defineProps({ transaction: { type: Object, required: true } });
 const toast = useToast();
@@ -21,7 +22,10 @@ const { mutate: updateTx } = useUpdateTransaction({
         toast.add({ severity: 'success', summary: 'Updated', life: 2500 });
         dialogRef.value.close();
     },
-    onError: (e) => toast.add({ severity: 'error', summary: 'Error', detail: e.message, life: 3000 }),
+    onError: (e) => {
+        const { message, detailText } = parseApiError(e, 'Gagal menyimpan transaction');
+        toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
+    },
 });
 
 const initialValues = ref({

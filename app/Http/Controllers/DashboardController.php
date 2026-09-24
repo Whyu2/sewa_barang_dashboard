@@ -34,6 +34,11 @@ class DashboardController
         return Inertia::render('MastersRegions/Pages/IndexPage');
     }
 
+    public function masterUser(): Response
+    {
+        return Inertia::render('MastersUsers/Pages/IndexPage');
+    }
+
     public function transaction(): Response
     {
         return Inertia::render('Transactions/Pages/IndexPage');

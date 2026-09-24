@@ -72,7 +72,7 @@ const isActive = (route) => {
 };
 
 const isMasterActive = computed(() =>
-    ['/master-category', '/master-region', '/master-product'].some((r) =>
+    ['/master-category', '/master-region', '/master-product', '/master-user'].some((r) =>
         currentUrl.value.startsWith(r)
     )
 );
@@ -108,6 +108,11 @@ const items = ref([
                 label: 'Product',
                 icon: 'pi pi-box',
                 route: '/master-product'
+            },
+            {
+                label: 'User',
+                icon: 'pi pi-users',
+                route: '/master-user'
             },
         ]
     },

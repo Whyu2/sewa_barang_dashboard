@@ -10,6 +10,7 @@ import ProductForm from "@/inertia/Modules/MastersProducts/Components/ProductFor
 import useInvalidateQuery from "@/inertia/Modules/MastersProducts/Composables/UseInvalidateQuery.js";
 import ProductDetail from "@/inertia/Modules/MastersProducts/Components/ProductDetail.vue";
 import { formatIDR } from "@/inertia/Utils/formatIDR.js";
+import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 
 
 const {useDeleteProduct} = useMutation();
@@ -19,6 +20,10 @@ const { mutate: deleteProduct } = useDeleteProduct({
     onSuccess: async () => {
         await useInvalidateFetchProductPaginated();
         toast.add({ severity: 'success', summary: 'Success', life: 2500 });    },
+    onError: (error) => {
+        const { message, detailText } = parseApiError(error, 'Gagal menghapus product');
+        toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
+    },
 });
 
 const {useFetchProductPaginated} = useQuery();

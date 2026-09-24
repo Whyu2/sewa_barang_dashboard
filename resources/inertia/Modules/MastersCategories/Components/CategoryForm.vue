@@ -6,6 +6,7 @@ import { yupResolver } from '@primevue/forms/resolvers/yup';
 import * as yup from "yup";
 import useMutation from "@/inertia/Modules/MastersCategories/Composables/UseMutation.js";
 import useInvalidateQuery from "@/inertia/Modules/MastersCategories/Composables/UseInvalidateQuery.js";
+import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 
 const props = defineProps({
     isUpdate: {
@@ -27,7 +28,8 @@ const {mutate: createCategoryMutation} = useCreateCategory({
             await useInvalidateFetchCategoryPaginated();
             toast.add({ severity: 'success', summary: 'Success', life: 2500 });
             dialogRef.value.close();
-        }
+        },
+        onError: showError,
     }
 )
 
@@ -36,9 +38,17 @@ const {mutate: updateCategoryMutation} = useUpdateCategory({
             await useInvalidateFetchCategoryPaginated();
             toast.add({ severity: 'success', summary: 'Success', life: 2500 });
             dialogRef.value.close();
-        }
+        },
+        onError: showError,
     }
 )
+
+const serverErrors = ref({});
+const showError = (error) => {
+    const { message, detailText, fieldErrors } = parseApiError(error, 'Gagal menyimpan category');
+    serverErrors.value = fieldErrors;
+    toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
+};
 
 const initialValues = ref({
     name: '',
@@ -57,6 +67,7 @@ const onFormSubmit = ({ valid, values }) => {
     if (!valid) {
         return;
     }
+    serverErrors.value = {};
     const id = props?.category?.id;
     const payload = {
         name: values.name,
@@ -97,9 +108,17 @@ watch(
                         variant="simple"
                         size="small"
                     >
-                        {{ $form.name.error?.message }}
-                    </Message>
-            </div>
+                            {{ $form.name.error?.message }}
+                        </Message>
+                        <Message
+                            v-if="!$form.name?.invalid && serverErrors.name"
+                            severity="error"
+                            variant="simple"
+                            size="small"
+                        >
+                            {{ serverErrors.name }}
+                        </Message>
+                </div>
 
             <div class="mb-2">
                 <label for="description">Description</label>
@@ -110,8 +129,16 @@ watch(
                     size="small"
                     variant="simple"
                 >
-                    {{ $form.description.error?.message }}
-                </Message>
+                        {{ $form.description.error?.message }}
+                    </Message>
+                    <Message
+                        v-if="!$form.description?.invalid && serverErrors.description"
+                        severity="error"
+                        size="small"
+                        variant="simple"
+                    >
+                        {{ serverErrors.description }}
+                    </Message>
             </div>
             <div class="flex justify-end">
                 <Button type="submit" :label="`${props?.isUpdate ? 'Update' : 'Submit' }`" icon="pi pi-send" class="mt-4" />

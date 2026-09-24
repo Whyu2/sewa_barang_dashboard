@@ -10,7 +10,7 @@ const useMutation = () => {
     useMutationTanstack({
       mutationKey: ['createRegion'],
       mutationFn: ({ payload }) => createRegion(payload),
-      onError: error => onError(error),
+      onError: error => onError?.(error),
       onSuccess: data => onSuccess(data),
     });
 
@@ -18,7 +18,7 @@ const useMutation = () => {
         useMutationTanstack({
             mutationKey: ['deleteRegion'],
             mutationFn: ({ id }) => deleteRegion(id),
-            onError: error => onError(error),
+            onError: error => onError?.(error),
             onSuccess: data => onSuccess(data),
         });
 
@@ -26,7 +26,7 @@ const useMutation = () => {
         useMutationTanstack({
             mutationKey: ['updateRegion'],
             mutationFn: ({ id, payload }) => updateRegion( id, payload),
-            onError: error => onError(error),
+            onError: error => onError?.(error),
             onSuccess: data => onSuccess(data),
         });
   return {

@@ -29,6 +29,7 @@ import Divider from 'primevue/divider';
 import FileUpload from 'primevue/fileupload';
 import Chart from 'primevue/chart';
 import DatePicker from 'primevue/datepicker';
+import Password from 'primevue/password';
 import useTheme from './Composables/useTheme.js';
 
 // Terapkan tema tersimpan (dark/light) sedini mungkin agar konsisten di semua halaman.
@@ -104,6 +105,7 @@ createInertiaApp({
         app.component('FileUpload', FileUpload);
         app.component('Chart', Chart);
         app.component('DatePicker', DatePicker);
+        app.component('Password', Password);
 
         // 🔥 REGISTER DIRECTIVES
         app.directive('ripple', Ripple);

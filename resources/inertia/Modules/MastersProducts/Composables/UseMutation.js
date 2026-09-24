@@ -10,7 +10,7 @@ const useMutation = () => {
     useMutationTanstack({
       mutationKey: ['createProduct'],
       mutationFn: ({ payload }) => createProduct(payload),
-      onError: error => onError(error),
+      onError: error => onError?.(error),
       onSuccess: data => onSuccess(data),
     });
 
@@ -18,7 +18,7 @@ const useMutation = () => {
         useMutationTanstack({
             mutationKey: ['deleteProduct'],
             mutationFn: ({ id }) => deleteProduct(id),
-            onError: error => onError(error),
+            onError: error => onError?.(error),
             onSuccess: data => onSuccess(data),
         });
 
@@ -26,7 +26,7 @@ const useMutation = () => {
         useMutationTanstack({
             mutationKey: ['updateProduct'],
             mutationFn: ({ id, payload }) => updateProduct( id, payload),
-            onError: error => onError(error),
+            onError: error => onError?.(error),
             onSuccess: data => onSuccess(data),
         });
   return {

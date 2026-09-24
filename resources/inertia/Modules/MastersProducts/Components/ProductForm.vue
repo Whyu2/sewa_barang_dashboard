@@ -8,6 +8,7 @@ import useMutation from "@/inertia/Modules/MastersProducts/Composables/UseMutati
 import useInvalidateQuery from "@/inertia/Modules/MastersProducts/Composables/UseInvalidateQuery.js";
 import useQueryCategories from "@/inertia/Modules/MastersCategories/Composables/UseQuery.js";
 import useQueryRegions from "@/inertia/Modules/MastersRegions/Composables/UseQuery.js";
+import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 
 
 const props = defineProps({
@@ -77,7 +78,11 @@ const { mutate: createProductMutation } = useCreateProduct({
         await useInvalidateFetchProductPaginated();
         toast.add({ severity: 'success', summary: 'Success', life: 2500 });
         dialogRef.value.close();
-    }
+    },
+    onError: (error) => {
+        const { message, detailText } = parseApiError(error, 'Gagal menyimpan product');
+        toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
+    },
 }
 )
 
@@ -86,7 +91,11 @@ const { mutate: updateProductMutation } = useUpdateProduct({
         await useInvalidateFetchProductPaginated();
         toast.add({ severity: 'success', summary: 'Success', life: 2500 });
         dialogRef.value.close();
-    }
+    },
+    onError: (error) => {
+        const { message, detailText } = parseApiError(error, 'Gagal menyimpan product');
+        toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
+    },
 }
 )
 

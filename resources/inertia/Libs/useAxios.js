@@ -35,8 +35,13 @@ axiosInstance.interceptors.response.use(
             return Promise.reject(new Error(error));
         }
         try {
-            const errMessage = error.response?.data?.message;
-            return Promise.reject(new Error(errMessage));
+            const errMessage = error.response?.data?.message || error.message || 'Request failed';
+            const err = new Error(errMessage);
+            // Pertahankan payload BE agar FE bisa render detail validasi ({message, errors})
+            err.status = error.response?.status;
+            err.data = error.response?.data;
+            err.original = error;
+            return Promise.reject(err);
         } catch (e) {
             console.info('Failed to parsing response message: ', e);
         }

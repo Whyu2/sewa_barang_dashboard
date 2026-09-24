@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\UserRole;
 use App\Services\UserService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 class UserController extends BaseController
@@ -68,7 +70,7 @@ class UserController extends BaseController
                     new OA\Property(property: "name", type: "string", example: "Staff A"),
                     new OA\Property(property: "email", type: "string", example: "staffA@example.com"),
                     new OA\Property(property: "password", type: "string", example: "password123"),
-                    new OA\Property(property: "role", type: "string", example: "staff"),
+                    new OA\Property(property: "role", type: "string", enum: ["admin", "staff"], example: "staff"),
                 ]
             )
         ),
@@ -85,7 +87,7 @@ class UserController extends BaseController
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|string|min:6',
-                'role' => 'required|string|in:admin,staff,user',
+                'role' => ['required', 'string', Rule::in(UserRole::values())],
             ]);
             $user = $this->service->create($data);
             return $this->success($user, "User created", 201);
@@ -139,7 +141,7 @@ class UserController extends BaseController
                     new OA\Property(property: "name", type: "string", example: "Staff A"),
                     new OA\Property(property: "email", type: "string", example: "staffA@example.com"),
                     new OA\Property(property: "password", type: "string", example: "password123"),
-                    new OA\Property(property: "role", type: "string", example: "staff"),
+                    new OA\Property(property: "role", type: "string", enum: ["admin", "staff"], example: "staff"),
                 ]
             )
         ),
@@ -156,7 +158,7 @@ class UserController extends BaseController
                 'name' => 'sometimes|string|max:255',
                 'email' => 'sometimes|email|unique:users,email,' . $id,
                 'password' => 'sometimes|nullable|string|min:6',
-                'role' => 'sometimes|string|in:admin,staff,user',
+                'role' => ['sometimes', 'string', Rule::in(UserRole::values())],
             ]);
             $updated = $this->service->update($data, $id);
             return $this->success($updated, "User updated");

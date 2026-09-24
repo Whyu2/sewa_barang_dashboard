@@ -15,6 +15,7 @@ import { formatDateID } from '@/inertia/Utils/formatDate.js';
 import { getStatusSeverity, getStatusLabel } from '@/inertia/Utils/statusBadge.js';
 import { formatTRX } from '@/inertia/Utils/formatTRX.js';
 import { formatDurationDays } from '@/inertia/Utils/rentalDuration.js';
+import { parseApiError } from '@/inertia/Utils/parseApiError.js';
 
 const toast = useToast();
 const { useFetchTransactionsPaginated } = useQuery();
@@ -29,7 +30,10 @@ const { mutate: delTx } = useDeleteTransaction({
         await useInvalidateFetchTransactionsPaginated();
         toast.add({ severity: 'success', summary: 'Deleted', life: 2500 });
     },
-    onError: (e) => toast.add({ severity: 'error', summary: 'Error', detail: e.message, life: 3000 }),
+    onError: (e) => {
+        const { message, detailText } = parseApiError(e, 'Gagal menghapus transaction');
+        toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
+    },
 });
 
 const openDetail = (row) => openBaseDialog({ titleHeader: 'Detail Transaction', component: TransactionDetail, width: '60vw', componentProps: { transaction: row } });

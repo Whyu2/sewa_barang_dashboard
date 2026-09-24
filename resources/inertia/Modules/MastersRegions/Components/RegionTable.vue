@@ -8,6 +8,7 @@ import confirmDialog from "@/inertia/Composables/ConfirmDialog.js";
 import useMutation from "@/inertia/Modules/MastersRegions/Composables/UseMutation.js";
 import useInvalidateQuery from "@/inertia/Modules/MastersRegions/Composables/UseInvalidateQuery.js";
 import RegionForm from "@/inertia/Modules/MastersRegions/Components/RegionForm.vue";
+import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 
 
 const {useDeleteRegion} = useMutation();
@@ -17,6 +18,10 @@ const { mutate: deleteRegion } = useDeleteRegion({
     onSuccess: async () => {
         await useInvalidateFetchRegionPaginated();
         toast.add({ severity: 'success', summary: 'Success', life: 2500 });    },
+    onError: (error) => {
+        const { message, detailText } = parseApiError(error, 'Gagal menghapus region');
+        toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
+    },
 });
 
 const {useFetchRegionPaginated} = useQuery();

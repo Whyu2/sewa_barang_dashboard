@@ -76,11 +76,11 @@ const onclearCallback = () => {
 const { mutate: createProductMutation } = useCreateProduct({
     onSuccess: async () => {
         await useInvalidateFetchProductPaginated();
-        toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+        toast.add({ severity: 'success', summary: 'Data berhasil disimpan', life: 2500 });
         dialogRef.value.close();
     },
     onError: (error) => {
-        const { message, detailText } = parseApiError(error, 'Gagal menyimpan product');
+        const { message, detailText } = parseApiError(error, 'Gagal menyimpan produk');
         toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
     },
 }
@@ -89,11 +89,11 @@ const { mutate: createProductMutation } = useCreateProduct({
 const { mutate: updateProductMutation } = useUpdateProduct({
     onSuccess: async () => {
         await useInvalidateFetchProductPaginated();
-        toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+        toast.add({ severity: 'success', summary: 'Data berhasil diperbarui', life: 2500 });
         dialogRef.value.close();
     },
     onError: (error) => {
-        const { message, detailText } = parseApiError(error, 'Gagal menyimpan product');
+        const { message, detailText } = parseApiError(error, 'Gagal menyimpan produk');
         toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
     },
 }
@@ -108,10 +108,10 @@ const initialValues = ref({
 
 const resolver = yupResolver(
     yup.object({
-        name: yup.string().required(),
+        name: yup.string().required('Nama wajib diisi'),
         description: yup.string().nullable(),
-        category_id: yup.number().required(),
-        product_region_id: yup.array().min(1).required(),
+        category_id: yup.number().typeError('Kategori wajib dipilih').required('Kategori wajib dipilih'),
+        product_region_id: yup.array().min(1, 'Pilih minimal 1 wilayah').required('Wilayah wajib dipilih'),
     })
 );
 
@@ -173,16 +173,16 @@ watch(
     <div class="card">
         <Form v-slot="$form" :initialValues="initialValues" :resolver="resolver" @submit="onFormSubmit">
             <div class="mb-2">
-                <label for="name">Name</label>
-                <InputText name="name" placeholder="Name" class="w-full" />
+                <label for="name">Nama</label>
+                <InputText name="name" placeholder="cth: Tenda Dome 4 Orang" class="w-full" />
                 <Message v-if="$form.name?.invalid" severity="error" variant="simple" size="small">
                     {{ $form.name.error?.message }}
                 </Message>
             </div>
             <div class="mb-2">
-                <label for="category">Category</label>
+                <label for="category">Kategori</label>
                 <Dropdown name="category_id" :options="categoryOpts.data || []" optionLabel="name" optionValue="id"
-                    placeholder="Select Category" checkmark :highlightOnSelect="false" class="w-full md:w-14rem" />
+                    placeholder="Pilih Kategori" checkmark :highlightOnSelect="false" class="w-full md:w-14rem" />
                 <Message v-if="$form.category_id?.invalid" severity="error" size="small" variant="simple">
                     {{ $form.category_id.error?.message }}
                 </Message>
@@ -191,15 +191,15 @@ watch(
 
 
             <div class="mb-2">
-                <label for="description">Description</label>
-                <InputText name="description" placeholder="Description" class="w-full" />
+                <label for="description">Deskripsi</label>
+                <InputText name="description" placeholder="cth: Kapasitas 4 orang, waterproof" class="w-full" />
                 <Message v-if="$form.description?.invalid" severity="error" size="small" variant="simple">
                     {{ $form.description.error?.message }}
                 </Message>
             </div>
             <div class="mb-2">
                 <label for="product_region_id" class="block mb-1">
-                    Mapping Product Region
+                    Stok per Wilayah
                 </label>
                 <CheckboxGroup name="product_region_id" class="flex flex-col gap-1">
                     <div v-for="region in regionOpts" :key="region.id"
@@ -207,9 +207,9 @@ watch(
                         <label>{{ region.name }}</label>
 
                         <Checkbox :value="region.id" size="small" />
-                        <span class="text-sm">QTY:</span>
+                        <span class="text-sm">Stok:</span>
                         <InputNumber :modelValue="getQty(region.id)" @update:modelValue="val => setQty(region.id, val)"
-                            placeholder="QTY" showButtons :min="0" size="small"
+                            placeholder="Jumlah" showButtons :min="0" size="small"
                             :disabled="!$form.product_region_id?.value?.includes(region.id)" />
                     </div>
                 </CheckboxGroup>
@@ -221,16 +221,16 @@ watch(
             </label>
             <div class="card flex flex-col gap-2">
                 <div class="flex flex-row items-center gap-2">
-                    <img v-if="previewFile" :src="previewFile" alt="Image" class="shadow-md rounded-xl w-full sm:w-64"
+                    <img v-if="previewFile" :src="previewFile" alt="Foto produk" class="shadow-md rounded-xl w-full sm:w-64"
                         style="filter: grayscale(100%)" />
                     <Button @click="onclearCallback()" icon="pi pi-times" rounded variant="outlined" severity="danger"
                         v-if="previewFile"></Button>
                 </div>
                 <FileUpload mode="basic" @select="onFileSelect" customUpload auto severity="secondary" accept="image/*"
-                    class="p-button-outlined" />
+                    class="p-button-outlined" chooseLabel="Pilih Foto" />
             </div>
             <div class="flex justify-end">
-                <Button type="submit" :label="`${props?.isUpdate ? 'Update' : 'Submit'}`" icon="pi pi-send"
+                <Button type="submit" :label="`${props?.isUpdate ? 'Perbarui' : 'Simpan'}`" icon="pi pi-check"
                     class="mt-4" />
             </div>
         </Form>

@@ -28,50 +28,50 @@ const { useInvalidateFetchTransactionsPaginated } = useInvalidateQuery();
 const { mutate: delTx } = useDeleteTransaction({
     onSuccess: async () => {
         await useInvalidateFetchTransactionsPaginated();
-        toast.add({ severity: 'success', summary: 'Deleted', life: 2500 });
+        toast.add({ severity: 'success', summary: 'Data berhasil dihapus', life: 2500 });
     },
     onError: (e) => {
-        const { message, detailText } = parseApiError(e, 'Gagal menghapus transaction');
+        const { message, detailText } = parseApiError(e, 'Gagal menghapus transaksi');
         toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
     },
 });
 
-const openDetail = (row) => openBaseDialog({ titleHeader: 'Detail Transaction', component: TransactionDetail, width: '60vw', componentProps: { transaction: row } });
-const openEdit = (row) => openBaseDialog({ titleHeader: 'Edit Transaction', component: TransactionForm, width: '50vw', componentProps: { transaction: row } });
-const confirmDelete = (id) => baseConfirmDialog({ message: 'Delete this transaction?', header: 'Delete Confirmation', acceptLabel: 'Delete', onAccept: () => delTx({ id }) });
+const openDetail = (row) => openBaseDialog({ titleHeader: 'Detail Transaksi', component: TransactionDetail, width: '60vw', componentProps: { transaction: row } });
+const openEdit = (row) => openBaseDialog({ titleHeader: 'Ubah Transaksi', component: TransactionForm, width: '50vw', componentProps: { transaction: row } });
+const confirmDelete = (id) => baseConfirmDialog({ message: 'Hapus data ini? Tindakan ini tidak dapat dibatalkan.', header: 'Konfirmasi Hapus', acceptLabel: 'Hapus', onAccept: () => delTx({ id }) });
 
 </script>
 <template>
     <div class="card">
         <DataTable v-if="tx" :value="tx.data" paginator :rows="10" :rowsPerPageOptions="[10,20,50]" tableStyle="min-width: 70rem" showGridlines>
-            <Column header="TRX ID" style="width:6rem"><template #body="{data}"><span class="font-mono text-xs">{{ formatTRX(data.id) }}</span></template></Column>
-            <Column header="Product">
+            <Column header="ID Transaksi" style="width:6rem"><template #body="{data}"><span class="font-mono text-xs">{{ formatTRX(data.id) }}</span></template></Column>
+            <Column header="Produk">
                 <template #body="{ data }">{{ data.product?.name ?? '-' }}</template>
             </Column>
-            <Column header="Region">
+            <Column header="Wilayah">
                 <template #body="{ data }">{{ data.region?.name ?? '-' }}</template>
             </Column>
             <Column field="renter_name" header="Penyewa" />
-            <Column field="qty" header="Qty" style="width:5rem" />
+            <Column field="qty" header="Jml" style="width:5rem" />
             <Column header="Harga">
                 <template #body="{ data }">{{ formatIDR(data.rent_price) }}</template>
             </Column>
-            <Column header="Tgl Sewa">
+            <Column header="Tanggal Sewa">
                 <template #body="{ data }">{{ formatDateID(data.rent_date) }}</template>
             </Column>
-            <Column header="Tgl Perkiraan Pengembalian">
+            <Column header="Perkiraan Kembali">
                 <template #body="{ data }">{{ formatDateID(data.expected_return_date) }}</template>
             </Column>
             <Column header="Lama Sewa" style="width:7rem">
                 <template #body="{ data }">{{ formatDurationDays(data.rent_date, data.expected_return_date) }}</template>
             </Column>
-            <Column header="Tgl Pengembalian">
+            <Column header="Tanggal Kembali">
                 <template #body="{ data }">{{ formatDateID(data.return_date) }}</template>
             </Column>
             <Column header="Status">
                 <template #body="{ data }"><Tag :value="getStatusLabel(data.status)" :severity="getStatusSeverity(data.status)" /></template>
             </Column>
-            <Column header="Action" style="width:10rem">
+            <Column header="Aksi" style="width:10rem">
                 <template #body="{ data }">
                     <Button icon="pi pi-eye" rounded text size="small" @click="openDetail(data)" />
                     <Button icon="pi pi-pencil" rounded text size="small" @click="openEdit(data)" />

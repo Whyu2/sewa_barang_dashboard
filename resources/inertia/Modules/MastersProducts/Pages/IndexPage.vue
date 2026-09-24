@@ -9,10 +9,10 @@ const store = useAppBreadcrumbStore();
 onMounted(() => {
     store.setItem([
         {
-            label: 'Master',
+            label: 'Data Master',
         },
         {
-            label: 'Product'
+            label: 'Produk'
         },
     ])
 })
@@ -22,9 +22,9 @@ onMounted(() => {
 <template>
     <DashboardLayout  use-breadcrumb>
         <div class="flex justify-start ">
-            <p class="text-xl font-bold">Product</p>
+            <p class="text-xl font-bold">Produk</p>
         </div>
-        <p class="text-sm text-gray-500 mb-4">Kelola katalog barang sewaan beserta foto, QR, dan stok per region.</p>
+        <p class="text-sm text-gray-500 mb-4">Kelola katalog barang sewaan beserta foto, QR, dan stok per wilayah.</p>
         <ProductTable />
     </DashboardLayout>
 </template>

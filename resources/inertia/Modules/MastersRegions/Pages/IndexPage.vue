@@ -9,10 +9,10 @@ const store = useAppBreadcrumbStore();
 onMounted(() => {
     store.setItem([
         {
-            label: 'Master',
+            label: 'Data Master',
         },
         {
-            label: 'Region'
+            label: 'Wilayah'
         },
     ])
 })
@@ -23,7 +23,7 @@ onMounted(() => {
 
     <DashboardLayout  use-breadcrumb>
         <div class="flex justify-start">
-            <p class="text-xl font-bold">Region</p>
+            <p class="text-xl font-bold">Wilayah</p>
         </div>
         <p class="text-sm text-gray-500 mb-4">Kelola lokasi/wilayah penempatan stok barang.</p>
         <RegionTable />

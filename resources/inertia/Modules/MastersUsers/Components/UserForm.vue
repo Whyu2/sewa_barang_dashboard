@@ -29,7 +29,7 @@ const {useFetchRegionPaginated} = useQueryRegions();
 const {data: regionOpts} = useFetchRegionPaginated();
 
 const showError = (error) => {
-    const { message, detailText, fieldErrors } = parseApiError(error, 'Gagal menyimpan user');
+    const { message, detailText, fieldErrors } = parseApiError(error, 'Gagal menyimpan pengguna');
     serverErrors.value = fieldErrors;
     toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
 };
@@ -39,7 +39,7 @@ const serverErrors = ref({});
 const {mutate: createUserMutation} = useCreateUser({
         onSuccess:async () => {
             await useInvalidateFetchUserPaginated();
-            toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+            toast.add({ severity: 'success', summary: 'Data berhasil disimpan', life: 2500 });
             dialogRef.value.close();
         },
         onError: showError,
@@ -49,7 +49,7 @@ const {mutate: createUserMutation} = useCreateUser({
 const {mutate: updateUserMutation} = useUpdateUser({
         onSuccess:async () => {
             await useInvalidateFetchUserPaginated();
-            toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+            toast.add({ severity: 'success', summary: 'Data berhasil diperbarui', life: 2500 });
             dialogRef.value.close();
         },
         onError: showError,
@@ -72,11 +72,11 @@ const resolver = yupResolver(
         email: yup.string().email('Email tidak valid').required('Email wajib diisi'),
         password: yup.string().when([], {
             is: () => !props.isUpdate,
-            then: (schema) => schema.required('Password wajib diisi').min(6, 'Minimal 6 karakter'),
+            then: (schema) => schema.required('Kata sandi wajib diisi').min(6, 'Minimal 6 karakter'),
             otherwise: (schema) => schema.transform(v => v === '' ? undefined : v).nullable().notRequired().min(6, 'Minimal 6 karakter'),
         }),
-        role: yup.string().oneOf(USER_ROLE_VALUES).required('Role wajib dipilih'),
-        region_id: yup.number().required('Region wajib dipilih'),
+        role: yup.string().oneOf(USER_ROLE_VALUES).required('Peran wajib dipilih'),
+        region_id: yup.number().typeError('Wilayah wajib dipilih').required('Wilayah wajib dipilih'),
     })
 );
 
@@ -93,7 +93,7 @@ const onFormSubmit = ({ valid, values }) => {
         role: id ? (props.user?.role ?? DEFAULT_USER_ROLE) : DEFAULT_USER_ROLE,
         region_id: values.region_id,
     };
-    // Password opsional saat edit: kosong = tidak diubah (BE unset password kosong)
+    // Kata sandi opsional saat edit: kosong = tidak diubah (BE unset password kosong)
     if (values.password) {
         payload.password = values.password;
     } else if (!props.isUpdate) {
@@ -131,8 +131,8 @@ watch(
     <div class="card">
         <Form v-slot="$form" :initialValues="initialValues" :resolver="resolver" @submit="onFormSubmit">
             <div class="mb-2">
-                <label for="name">Name</label>
-                    <InputText name="name" placeholder="Name" class="w-full" />
+                <label for="name">Nama</label>
+                    <InputText name="name" placeholder="cth: Budi Santoso" class="w-full" />
                     <Message
                         v-if="$form.name?.invalid"
                         severity="error"
@@ -153,7 +153,7 @@ watch(
 
             <div class="mb-2">
                 <label for="email">Email</label>
-                <InputText name="email" type="email" placeholder="Email" class="w-full" />
+                <InputText name="email" type="email" placeholder="cth: budi@example.com" class="w-full" />
                 <Message
                     v-if="$form.email?.invalid"
                     severity="error"
@@ -173,8 +173,8 @@ watch(
             </div>
 
             <div class="mb-2">
-                <label for="password" class="block mb-1">Password {{ props?.isUpdate ? '(kosongkan jika tidak diubah)' : '' }}</label>
-                <Password name="password" placeholder="Password" class="w-full" inputClass="w-full" toggleMask :feedback="false" />
+                <label for="password" class="block mb-1">Kata Sandi {{ props?.isUpdate ? '(kosongkan jika tidak diubah)' : '' }}</label>
+                <Password name="password" placeholder="Minimal 6 karakter" class="w-full" inputClass="w-full" toggleMask :feedback="false" />
                 <Message
                     v-if="$form.password?.invalid"
                     severity="error"
@@ -194,9 +194,9 @@ watch(
             </div>
 
             <div class="mb-2">
-                <label for="role">Role</label>
+                <label for="role">Peran</label>
                 <Dropdown name="role" :options="roleOpts" optionLabel="label" optionValue="value"
-                    placeholder="Select Role" checkmark :highlightOnSelect="false" class="w-full" disabled />
+                    placeholder="Pilih Peran" checkmark :highlightOnSelect="false" class="w-full" disabled />
                 <Message
                     v-if="$form.role?.invalid"
                     severity="error"
@@ -216,9 +216,9 @@ watch(
             </div>
 
             <div class="mb-2">
-                <label for="region_id">Region</label>
+                <label for="region_id">Wilayah</label>
                 <Dropdown name="region_id" :options="regionOpts?.data || []" optionLabel="name" optionValue="id"
-                    placeholder="Select Region" checkmark :highlightOnSelect="false" class="w-full" />
+                    placeholder="Pilih Wilayah" checkmark :highlightOnSelect="false" class="w-full" />
                 <Message
                     v-if="$form.region_id?.invalid"
                     severity="error"
@@ -237,7 +237,7 @@ watch(
                     </Message>
             </div>
             <div class="flex justify-end">
-                <Button type="submit" :label="`${props?.isUpdate ? 'Update' : 'Submit' }`" icon="pi pi-send" class="mt-4" />
+                <Button type="submit" :label="`${props?.isUpdate ? 'Perbarui' : 'Simpan' }`" icon="pi pi-check" class="mt-4" />
             </div>
         </Form>
     </div>

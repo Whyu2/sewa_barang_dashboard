@@ -39,15 +39,15 @@ const { mutate: logout } = useLogout({
     onSuccess: async () => {
         authStore.logout();
         router.visit('/login')
-        toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+        toast.add({ severity: 'success', summary: 'Anda telah keluar', life: 2500 });
     }
 })
 
 const confirmLogout = () => {
     baseConfirmDialog({
-        message: 'Do you want to logout ? ',
-        header: 'Logout Confirmation',
-        acceptLabel: 'Logout',
+        message: 'Keluar dari aplikasi?',
+        header: 'Konfirmasi Keluar',
+        acceptLabel: 'Keluar',
         onAccept: () => {
             logout()
         },
@@ -81,36 +81,36 @@ watch(isMasterActive, (v) => { if (v) expandedMaster.value = true; }, { immediat
 
 const items = ref([
     {
-        label: 'Home',
+        label: 'Beranda',
         icon: 'pi pi-home',
         route: '/'
     },
     {
-        label: 'Transaction',
+        label: 'Transaksi',
         icon: 'pi pi-shopping-cart',
         route: '/transaction'
     },
     {
-        label: 'Master',
+        label: 'Data Master',
         icon: 'pi pi-database',
         items: [
             {
-                label: 'Category',
+                label: 'Kategori',
                 icon: 'pi pi-tag',
                 route: '/master-category'
             },
             {
-                label: 'Region',
+                label: 'Wilayah',
                 icon: 'pi pi-map-marker',
                 route: '/master-region'
             },
             {
-                label: 'Product',
+                label: 'Produk',
                 icon: 'pi pi-box',
                 route: '/master-product'
             },
             {
-                label: 'User',
+                label: 'Pengguna',
                 icon: 'pi pi-users',
                 route: '/master-user'
             },
@@ -158,7 +158,7 @@ const currentYear = new Date().getFullYear();
                         text
                         severity="success"
                         rounded
-                        aria-label="Logout"
+                        aria-label="Keluar"
                         @click="confirmLogout"
                     />
             </div>
@@ -217,7 +217,7 @@ const currentYear = new Date().getFullYear();
                 <template #footer>
                     <div class="flex flex-col gap-2">
                         <Button
-                            label="Logout"
+                            label="Keluar"
                             icon="pi pi-sign-out"
                             severity="danger"
                             outlined

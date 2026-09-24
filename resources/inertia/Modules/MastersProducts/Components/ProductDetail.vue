@@ -55,10 +55,10 @@ const downloadImage = async () => {
                 <div>
                     <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">QR Code</p>
                     <Image :src="props.product.qr_code_url" class="w-28 h-28 border border-gray-300 rounded-lg" />
-                    <Button label="Download QR" size="small" icon="pi pi-download" severity="secondary" class="mt-2" @click="downloadImage" />
+                    <Button label="Unduh QR" size="small" icon="pi pi-download" severity="secondary" class="mt-2" @click="downloadImage" />
                 </div>
                 <div>
-                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Region - QTY</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Wilayah - Stok</p>
                     <div class="space-y-1">
                         <div v-for="region in props.product.product_region" :key="region.region_id" class="flex justify-between text-sm border border-gray-300 rounded px-2 py-1">
                             <span>{{ region.region_name }}</span><span class="font-medium">{{ region.qty }}</span>

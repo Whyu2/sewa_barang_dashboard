@@ -28,17 +28,17 @@ const props = defineProps({ transaction: { type: Object, required: true } });
                     <p class="font-medium mt-1">{{ transaction.renter_name }}</p>
                 </div>
                 <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">HP</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">No. HP</p>
                     <p class="font-medium mt-1">{{ transaction.renter_phone }}</p>
                 </div>
             </div>
             <div class="grid grid-cols-2 divide-x divide-gray-300">
                 <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Region</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Wilayah</p>
                     <p class="font-medium mt-1">{{ transaction.region?.name ?? '-' }}</p>
                 </div>
                 <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Qty</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Jumlah</p>
                     <p class="font-medium mt-1">{{ transaction.qty }}</p>
                 </div>
             </div>
@@ -48,18 +48,18 @@ const props = defineProps({ transaction: { type: Object, required: true } });
             </div>
             <div class="grid grid-cols-2 divide-x divide-gray-300">
                 <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Tgl Sewa</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Tanggal Sewa</p>
                     <p class="font-medium mt-1">{{ formatDateID(transaction.rent_date) }}</p>
                 </div>
                 <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Tgl Kembali (Rencana)</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Tanggal Kembali (Rencana)</p>
                     <p class="font-medium mt-1">{{ formatDateID(transaction.expected_return_date) }}</p>
                     <p class="text-xs text-gray-500 mt-1">Lama sewa: {{ formatDurationDays(transaction.rent_date, transaction.expected_return_date) }}</p>
                 </div>
             </div>
             <div class="grid grid-cols-2 divide-x divide-gray-300">
                 <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Tgl Kembali (Aktual)</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Tanggal Kembali (Aktual)</p>
                     <p class="font-medium mt-1">{{ formatDateID(transaction.return_date) }}</p>
                 </div>
                 <div class="p-3">
@@ -68,7 +68,7 @@ const props = defineProps({ transaction: { type: Object, required: true } });
                 </div>
             </div>
             <div class="p-3">
-                <p class="text-xs text-gray-500 uppercase tracking-wide">Notes</p>
+                <p class="text-xs text-gray-500 uppercase tracking-wide">Catatan</p>
                 <p class="font-medium mt-1 whitespace-pre-wrap break-words">{{ transaction.notes ?? '-' }}</p>
             </div>
             <div class="grid grid-cols-2 divide-x divide-gray-300">
@@ -77,7 +77,7 @@ const props = defineProps({ transaction: { type: Object, required: true } });
                     <p class="font-medium mt-1">{{ transaction.creator?.name ?? '-' }}</p>
                 </div>
                 <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Region Pembuat</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Wilayah Pembuat</p>
                     <p class="font-medium mt-1">{{ transaction.creator?.region?.name ?? transaction.region?.name ?? '-' }}</p>
                 </div>
             </div>
@@ -85,13 +85,13 @@ const props = defineProps({ transaction: { type: Object, required: true } });
 
         <div class="grid grid-cols-2 gap-4">
             <div class="rounded-lg border border-gray-300 p-3">
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Pickup Proof</p>
-                <Image v-if="transaction.pickup_proof_url" :src="transaction.pickup_proof_url" alt="Pickup Proof" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Bukti Pengambilan</p>
+                <Image v-if="transaction.pickup_proof_url" :src="transaction.pickup_proof_url" alt="Bukti pengambilan" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
                 <span v-else class="text-gray-400 text-xs">- tidak ada -</span>
             </div>
             <div class="rounded-lg border border-gray-300 p-3">
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Return Proof</p>
-                <Image v-if="transaction.return_proof_url" :src="transaction.return_proof_url" alt="Return Proof" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Bukti Pengembalian</p>
+                <Image v-if="transaction.return_proof_url" :src="transaction.return_proof_url" alt="Bukti pengembalian" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
                 <span v-else class="text-gray-400 text-xs">- tidak ada -</span>
             </div>
         </div>

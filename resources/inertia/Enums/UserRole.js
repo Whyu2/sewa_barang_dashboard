@@ -13,7 +13,7 @@ export const DEFAULT_USER_ROLE = USER_ROLES.STAFF;
 
 export const USER_ROLE_OPTIONS = Object.freeze([
     { label: 'Admin', value: USER_ROLES.ADMIN },
-    { label: 'Staff', value: USER_ROLES.STAFF },
+    { label: 'Staf', value: USER_ROLES.STAFF },
 ]);
 
 export const isUserRole = (value) => USER_ROLE_VALUES.includes(value);

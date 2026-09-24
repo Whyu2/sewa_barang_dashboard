@@ -26,7 +26,7 @@ const {useInvalidateFetchCategoryPaginated} = useInvalidateQuery();
 const {mutate: createCategoryMutation} = useCreateCategory({
         onSuccess:async () => {
             await useInvalidateFetchCategoryPaginated();
-            toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+            toast.add({ severity: 'success', summary: 'Data berhasil disimpan', life: 2500 });
             dialogRef.value.close();
         },
         onError: showError,
@@ -36,7 +36,7 @@ const {mutate: createCategoryMutation} = useCreateCategory({
 const {mutate: updateCategoryMutation} = useUpdateCategory({
         onSuccess:async () => {
             await useInvalidateFetchCategoryPaginated();
-            toast.add({ severity: 'success', summary: 'Success', life: 2500 });
+            toast.add({ severity: 'success', summary: 'Data berhasil diperbarui', life: 2500 });
             dialogRef.value.close();
         },
         onError: showError,
@@ -45,7 +45,7 @@ const {mutate: updateCategoryMutation} = useUpdateCategory({
 
 const serverErrors = ref({});
 const showError = (error) => {
-    const { message, detailText, fieldErrors } = parseApiError(error, 'Gagal menyimpan category');
+    const { message, detailText, fieldErrors } = parseApiError(error, 'Gagal menyimpan kategori');
     serverErrors.value = fieldErrors;
     toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
 };
@@ -57,7 +57,7 @@ const initialValues = ref({
 
 const resolver = yupResolver(
     yup.object({
-        name: yup.string().required(),
+        name: yup.string().required('Nama wajib diisi'),
         description: yup.string().nullable(),
     })
 );
@@ -100,8 +100,8 @@ watch(
     <div class="card">
         <Form v-slot="$form" :initialValues="initialValues" :resolver="resolver" @submit="onFormSubmit">
             <div class="mb-2">
-                <label for="name">Name</label>
-                    <InputText name="name" placeholder="Name"     class="w-full" />
+                <label for="name">Nama</label>
+                    <InputText name="name" placeholder="cth: Alat Camping"     class="w-full" />
                     <Message
                         v-if="$form.name?.invalid"
                         severity="error"
@@ -121,8 +121,8 @@ watch(
                 </div>
 
             <div class="mb-2">
-                <label for="description">Description</label>
-                <InputText name="description" placeholder="Description" class="w-full" />
+                <label for="description">Deskripsi</label>
+                <InputText name="description" placeholder="cth: Perlengkapan luar ruangan" class="w-full" />
                 <Message
                     v-if="$form.description?.invalid"
                     severity="error"
@@ -141,7 +141,7 @@ watch(
                     </Message>
             </div>
             <div class="flex justify-end">
-                <Button type="submit" :label="`${props?.isUpdate ? 'Update' : 'Submit' }`" icon="pi pi-send" class="mt-4" />
+                <Button type="submit" :label="`${props?.isUpdate ? 'Perbarui' : 'Simpan' }`" icon="pi pi-check" class="mt-4" />
             </div>
         </Form>
     </div>

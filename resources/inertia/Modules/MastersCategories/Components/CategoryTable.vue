@@ -17,9 +17,9 @@ const toast = useToast();
 const { mutate: deleteCategory } = useDeleteCategory({
     onSuccess: async () => {
         await useInvalidateFetchCategoryPaginated();
-        toast.add({ severity: 'success', summary: 'Success', life: 2500 });    },
+        toast.add({ severity: 'success', summary: 'Data berhasil dihapus', life: 2500 });    },
     onError: (error) => {
-        const { message, detailText } = parseApiError(error, 'Gagal menghapus category');
+        const { message, detailText } = parseApiError(error, 'Gagal menghapus kategori');
         toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
     },
 });
@@ -31,7 +31,7 @@ const {baseConfirmDialog} = confirmDialog();
 const handleOpenDialogAdd = () => {
     openBaseDialog(
         {
-            titleHeader: 'Add New Category',
+            titleHeader: 'Tambah Kategori Baru',
         component: CategoryForm,
         width: `50vw`,
         componentProps: {
@@ -43,7 +43,7 @@ const handleOpenDialogAdd = () => {
 const handleOpenDialogUpdate = (category) => {
     openBaseDialog(
         {
-            titleHeader: 'Update Category',
+            titleHeader: 'Ubah Kategori',
             component: CategoryForm,
             width: `50vw`,
             componentProps: {
@@ -54,9 +54,9 @@ const handleOpenDialogUpdate = (category) => {
 }
 const confirmDelete = (id) => {
     baseConfirmDialog({
-        message: 'Arsipkan kategori ini? Data disembunyikan tapi riwayat transaksi yang memakainya tetap aman.',
-        header: 'Delete Confirmation',
-        acceptLabel: 'Delete',
+        message: 'Hapus data ini? Tindakan ini tidak dapat dibatalkan.',
+        header: 'Konfirmasi Hapus',
+        acceptLabel: 'Hapus',
         onAccept: () => {
             deleteCategory({id});
         },
@@ -68,12 +68,12 @@ const confirmDelete = (id) => {
 <template>
     <div class="card">
         <div class="flex justify-end mb-4 ">
-         <Button label="Add New" @click="handleOpenDialogAdd" icon="pi pi-plus"/>
+         <Button label="Tambah Data" @click="handleOpenDialogAdd" icon="pi pi-plus"/>
         </div>
         <DataTable v-if="category" :value="category.data" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 50rem" show-gridlines>
-            <Column field="name" header="Name" style="width: 25%"></Column>
-            <Column field="description" header="Description" style="width: 25%"></Column>
-            <Column field="action" header="Action" style="width: 5%">
+            <Column field="name" header="Nama" style="width: 25%"></Column>
+            <Column field="description" header="Deskripsi" style="width: 25%"></Column>
+            <Column field="action" header="Aksi" style="width: 5%">
                 <template #body="slotProps">
                     <Button icon="pi pi-pencil" rounded text size="small" @click="handleOpenDialogUpdate(slotProps.data)"/>
                     <Button icon="pi pi-trash" rounded text size="small" @click="confirmDelete(slotProps.data.id)" />

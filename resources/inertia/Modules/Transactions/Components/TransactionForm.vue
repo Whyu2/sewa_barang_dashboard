@@ -19,11 +19,11 @@ const { useInvalidateFetchTransactionsPaginated } = useInvalidateQuery();
 const { mutate: updateTx } = useUpdateTransaction({
     onSuccess: async () => {
         await useInvalidateFetchTransactionsPaginated();
-        toast.add({ severity: 'success', summary: 'Updated', life: 2500 });
+        toast.add({ severity: 'success', summary: 'Data berhasil diperbarui', life: 2500 });
         dialogRef.value.close();
     },
     onError: (e) => {
-        const { message, detailText } = parseApiError(e, 'Gagal menyimpan transaction');
+        const { message, detailText } = parseApiError(e, 'Gagal menyimpan transaksi');
         toast.add({ severity: 'error', summary: message, detail: detailText, life: 4000 });
     },
 });
@@ -48,16 +48,16 @@ const statusOptions = [
 
 const resolver = yupResolver(
     yup.object({
-        renter_name: yup.string().required(),
-        renter_phone: yup.string().required(),
-        qty: yup.number().min(1).required(),
-        rent_price: yup.number().min(0).required(),
-        rent_date: yup.string().required(),
-        rental_duration_days: yup.number().typeError('Durasi wajib diisi').min(1, 'Minimal 1 hari').required('Sewa berapa lama wajib diisi'),
-        expected_return_date: yup.string().required(),
-        status: yup.string().oneOf(['rented','returned','overdue']).required(),
+        renter_name: yup.string().required('Nama penyewa wajib diisi'),
+        renter_phone: yup.string().required('No. HP penyewa wajib diisi'),
+        qty: yup.number().typeError('Jumlah wajib diisi').min(1, 'Minimal 1').required('Jumlah wajib diisi'),
+        rent_price: yup.number().typeError('Harga sewa wajib diisi').min(0, 'Minimal 0').required('Harga sewa wajib diisi'),
+        rent_date: yup.string().required('Tanggal sewa wajib diisi'),
+        rental_duration_days: yup.number().typeError('Durasi wajib diisi').min(1, 'Minimal 1 hari').required('Lama sewa wajib diisi'),
+        expected_return_date: yup.string().required('Perkiraan tanggal kembali wajib diisi'),
+        status: yup.string().oneOf(['rented','returned','overdue']).required('Status wajib dipilih'),
         notes: yup.string().nullable(),
-        return_date: yup.string().when('status', { is: 'returned', then: (s) => s.required('Return date wajib saat returned'), otherwise: (s) => s.nullable() }),
+        return_date: yup.string().when('status', { is: 'returned', then: (s) => s.required('Tanggal pengembalian wajib diisi saat status Dikembalikan'), otherwise: (s) => s.nullable() }),
     })
 );
 
@@ -156,87 +156,87 @@ const onSubmit = ({ valid, values }) => {
     <div class="card">
         <Form v-slot="$form" :key="transaction.id" :initialValues="initialValues" :resolver="resolver" @submit="onSubmit">
             <div class="mb-2">
-                <label>Product</label>
+                <label>Produk</label>
                 <InputText :modelValue="transaction.product?.name" disabled class="w-full" />
             </div>
             <div class="mb-2">
-                <label>Region</label>
+                <label>Wilayah</label>
                 <InputText :modelValue="transaction.region?.name" disabled class="w-full" />
             </div>
             <div class="mb-2">
-                <label>Renter Name</label>
-                <InputText name="renter_name" class="w-full" />
+                <label>Nama Penyewa</label>
+                <InputText name="renter_name" placeholder="cth: Budi Santoso" class="w-full" />
                 <Message v-if="$form.renter_name?.invalid" severity="error" size="small" variant="simple">{{ $form.renter_name.error?.message }}</Message>
             </div>
             <div class="mb-2">
-                <label>Renter Phone</label>
-                <InputText name="renter_phone" class="w-full" />
+                <label>No. HP Penyewa</label>
+                <InputText name="renter_phone" placeholder="cth: 081234567890" class="w-full" />
                 <Message v-if="$form.renter_phone?.invalid" severity="error" size="small" variant="simple">{{ $form.renter_phone.error?.message }}</Message>
             </div>
             <div class="grid grid-cols-2 gap-2">
                 <div class="mb-2">
-                    <label>Qty</label>
+                    <label>Jumlah</label>
                     <InputNumber name="qty" class="w-full" :min="1" showButtons />
                     <Message v-if="$form.qty?.invalid" severity="error" size="small" variant="simple">{{ $form.qty.error?.message }}</Message>
                 </div>
                 <div class="mb-2">
-                    <label>Rent Price</label>
+                    <label>Harga Sewa</label>
                     <InputNumber name="rent_price" class="w-full" :min="0" mode="currency" currency="IDR" locale="id-ID" />
                     <Message v-if="$form.rent_price?.invalid" severity="error" size="small" variant="simple">{{ $form.rent_price.error?.message }}</Message>
                 </div>
             </div>
             <div class="mb-2">
-                <label>Rent Date</label>
+                <label>Tanggal Sewa</label>
                 <InputText name="rent_date" type="date" class="w-full" @change="() => recalcExpected($form)" />
                 <Message v-if="$form.rent_date?.invalid" severity="error" size="small" variant="simple">{{ $form.rent_date.error?.message }}</Message>
             </div>
             <div class="mb-2">
-                <label>Sewa Berapa Lama? (hari)</label>
+                <label>Lama Sewa (hari)</label>
                 <InputNumber name="rental_duration_days" class="w-full" :min="1" showButtons suffix=" hari" @update:modelValue="() => recalcExpected($form)" />
                 <Message v-if="$form.rental_duration_days?.invalid" severity="error" size="small" variant="simple">{{ $form.rental_duration_days.error?.message }}</Message>
             </div>
             <div class="mb-2">
-                <label>Expected Return Date</label>
+                <label>Perkiraan Tanggal Kembali</label>
                 <InputText name="expected_return_date" type="date" class="w-full opacity-50" disabled />
-                <small class="text-gray-400">Otomatis: rent date + lama sewa</small>
+                <small class="text-gray-400">Otomatis: tanggal sewa + lama sewa</small>
                 <Message v-if="$form.expected_return_date?.invalid" severity="error" size="small" variant="simple">{{ $form.expected_return_date.error?.message }}</Message>
             </div>
             <div class="mb-2">
                 <label>Status</label>
-                <Dropdown name="status" :options="statusOptions" optionLabel="label" optionValue="value" placeholder="Select Status" checkmark :highlightOnSelect="false" class="w-full" />
+                <Dropdown name="status" :options="statusOptions" optionLabel="label" optionValue="value" placeholder="Pilih Status" checkmark :highlightOnSelect="false" class="w-full" />
                 <Message v-if="$form.status?.invalid" severity="error" size="small" variant="simple">{{ $form.status.error?.message }}</Message>
             </div>
             <div class="mb-2">
-                <label>Return Date <span v-if="$form.status?.value === 'returned'" class="text-red-500">*</span></label>
+                <label>Tanggal Pengembalian <span v-if="$form.status?.value === 'returned'" class="text-red-500">*</span></label>
                 <InputText name="return_date" type="date" class="w-full" :disabled="$form.status?.value !== 'returned'" :class="{ 'opacity-50': $form.status?.value !== 'returned' }" />
                 <Message v-if="$form.return_date?.invalid" severity="error" size="small" variant="simple">{{ $form.return_date.error?.message }}</Message>
-                <small v-if="$form.status?.value !== 'returned'" class="text-gray-400">Pilih status returned untuk mengisi tanggal pengembalian</small>
-                <small v-if="$form.status?.value === 'returned' && $form.return_date?.value && $form.expected_return_date?.value && isLate($form.return_date.value, $form.expected_return_date.value)" class="text-orange-500">Terlambat >1 jam → status akan tersimpan sebagai overdue</small>
-                <small v-else-if="$form.status?.value === 'returned' && $form.return_date?.value" class="text-green-600">On-time (≤ 1 jam) → returned</small>
+                <small v-if="$form.status?.value !== 'returned'" class="text-gray-400">Pilih status Dikembalikan untuk mengisi tanggal pengembalian</small>
+                <small v-if="$form.status?.value === 'returned' && $form.return_date?.value && $form.expected_return_date?.value && isLate($form.return_date.value, $form.expected_return_date.value)" class="text-orange-500">Terlambat >1 jam → status akan tersimpan sebagai Pengembalian Telat</small>
+                <small v-else-if="$form.status?.value === 'returned' && $form.return_date?.value" class="text-green-600">Tepat waktu (≤ 1 jam) → Dikembalikan</small>
             </div>
             <div v-if="$form.status?.value === 'returned'" class="mb-2">
-                <label class="block mb-1">Return Proof (opsional)</label>
+                <label class="block mb-1">Bukti Pengembalian (opsional)</label>
                 <div v-if="previewReturn" class="flex items-center gap-2 mb-2">
-                    <Image :src="previewReturn" alt="Return Proof" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
+                    <Image :src="previewReturn" alt="Bukti pengembalian" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
                     <Button @click="clearReturn" icon="pi pi-times" rounded variant="outlined" severity="danger" size="small" v-tooltip.top="'Hapus foto'" />
                 </div>
                 <div v-else-if="removeReturnProof" class="flex items-center gap-2 mb-2">
-                    <small class="text-red-500">Foto akan dihapus saat Update.</small>
+                    <small class="text-red-500">Foto akan dihapus saat diperbarui.</small>
                     <Button @click="undoRemoveReturn" label="Batalkan" size="small" severity="secondary" variant="outlined" />
                 </div>
                 <FileUpload mode="basic" @select="onFileSelectReturn" customUpload auto severity="secondary" accept="image/*" class="p-button-outlined" chooseLabel="Pilih Foto" />
             </div>
             <div class="mb-2">
-                <label>Notes</label>
+                <label>Catatan</label>
                 <InputText name="notes" placeholder="Catatan transaksi" class="w-full" />
                 <Message v-if="$form.notes?.invalid" severity="error" size="small" variant="simple">{{ $form.notes.error?.message }}</Message>
             </div>
             <div v-if="transaction.pickup_proof_url" class="mt-3">
-                <label class="block mb-1 font-semibold text-sm">Pickup Proof (read-only)</label>
-                <Image :src="transaction.pickup_proof_url" alt="Pickup Proof" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
+                <label class="block mb-1 font-semibold text-sm">Bukti Pengambilan (hanya baca)</label>
+                <Image :src="transaction.pickup_proof_url" alt="Bukti pengambilan" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
             </div>
             <div class="flex justify-end">
-                <Button type="submit" label="Update" icon="pi pi-send" class="mt-4" />
+                <Button type="submit" label="Perbarui" icon="pi pi-check" class="mt-4" />
             </div>
         </Form>
     </div>

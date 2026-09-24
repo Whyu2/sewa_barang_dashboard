@@ -9,10 +9,10 @@ const store = useAppBreadcrumbStore();
 onMounted(() => {
     store.setItem([
         {
-            label: 'Master',
+            label: 'Data Master',
         },
         {
-            label: 'User'
+            label: 'Pengguna'
         },
     ])
 })
@@ -23,9 +23,9 @@ onMounted(() => {
 
     <DashboardLayout  use-breadcrumb>
         <div class="flex justify-start">
-            <p class="text-xl font-bold">User</p>
+            <p class="text-xl font-bold">Pengguna</p>
         </div>
-        <p class="text-sm text-gray-500 mb-4">Kelola akun pengguna beserta role dan wilayahnya.</p>
+        <p class="text-sm text-gray-500 mb-4">Kelola akun pengguna beserta peran dan wilayahnya.</p>
         <UserTable />
     </DashboardLayout>
 </template>

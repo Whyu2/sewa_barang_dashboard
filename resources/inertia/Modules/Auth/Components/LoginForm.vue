@@ -36,7 +36,7 @@ const initialValues = ref({
 const resolver = yupResolver(
     yup.object({
         email: yup.string().email('Email tidak valid').required('Email wajib diisi'),
-        password: yup.string().required('Password wajib diisi'),
+        password: yup.string().required('Kata sandi wajib diisi'),
     })
 );
 
@@ -72,8 +72,8 @@ const onFormSubmit = ({ valid, values }) => {
             </div>
 
             <div class="mb-3">
-                <label for="password" class="block mb-1">Password</label>
-                <Password name="password" placeholder="Password" class="w-full" inputClass="w-full" toggleMask :feedback="false" />
+                <label for="password" class="block mb-1">Kata Sandi</label>
+                <Password name="password" placeholder="Kata sandi" class="w-full" inputClass="w-full" toggleMask :feedback="false" />
                 <Message
                     v-if="$form.password?.invalid"
                     severity="error"

@@ -12,7 +12,7 @@ function showToast(message, severity = 'error') {
 
     appInstance.config.globalProperties.$toast.add({
         severity,
-        summary: 'Error',
+        summary: 'Terjadi kesalahan',
         detail: message,
         life: 3000
     })

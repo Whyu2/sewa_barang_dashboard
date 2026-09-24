@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\RegionController;
@@ -7,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\TransactionLogController;
-
+use App\Http\Controllers\Api\UserController;
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -43,6 +44,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/product/{id}', [ProductController::class, 'productUpdate']);
     Route::delete('/product/{id}', [ProductController::class, 'productDestroy']);
     Route::get('/product-by-qr', [ProductController::class, 'productFindByQrCode']);
+
+    Route::get('/users', [UserController::class, 'users']);
+    Route::get('/user-paginated', [UserController::class, 'userPaginated']);
+    Route::post('/user', [UserController::class, 'userStore']);
+    Route::put('/user/{id}', [UserController::class, 'userUpdate']);
+    Route::delete('/user/{id}', [UserController::class, 'userDestroy']);
 });
 
 

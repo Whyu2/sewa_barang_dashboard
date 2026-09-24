@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://my-default-host.com",
+            "url": "http://localhost:8000/api",
             "description": "API Server"
         }
     ],
@@ -855,7 +855,6 @@
                                     "renter_name",
                                     "renter_phone",
                                     "rent_date",
-                                    "expected_return_date",
                                     "qty",
                                     "rent_price"
                                 ],
@@ -881,7 +880,13 @@
                                         "format": "date",
                                         "example": "2024-04-02"
                                     },
+                                    "rental_duration_days": {
+                                        "description": "Lama sewa dalam hari. expected_return_date = rent_date + durasi",
+                                        "type": "integer",
+                                        "example": 3
+                                    },
                                     "expected_return_date": {
+                                        "description": "Opsional jika rental_duration_days diisi (akan dihitung otomatis)",
                                         "type": "string",
                                         "format": "date",
                                         "example": "2024-04-05"
@@ -944,6 +949,38 @@
                     },
                     "401": {
                         "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/rent-transaction/{id}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Detail transaksi",
+                "operationId": "getRentTransactionShow",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil"
+                    },
+                    "404": {
+                        "description": "Not found"
                     }
                 },
                 "security": [
@@ -1109,6 +1146,224 @@
                     }
                 ]
             }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Mendapatkan daftar semua user",
+                "description": "Mengembalikan array berisi semua data user",
+                "operationId": "getUserList",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil data"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user-paginated": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Daftar user (Paginated)",
+                "description": "Mengambil daftar user dengan sistem pagination",
+                "operationId": "getUserPaginated",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil data"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Menambahkan user baru",
+                "description": "Membuat data user baru ke dalam database",
+                "operationId": "storeUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "region_id",
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "role"
+                                ],
+                                "properties": {
+                                    "region_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Staff A"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "staffA@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "example": "staff"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/{id}": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user",
+                "description": "Memperbarui data user berdasarkan ID",
+                "operationId": "updateUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID User",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "region_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Staff A"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "staffA@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "example": "staff"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User berhasil diperbarui"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Hapus user",
+                "description": "Menghapus user berdasarkan ID",
+                "operationId": "destroyUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID User",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User berhasil dihapus"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -1147,6 +1402,10 @@
         {
             "name": "Logs",
             "description": "Logs"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
         }
     ]
 }

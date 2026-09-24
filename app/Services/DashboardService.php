@@ -77,8 +77,8 @@ class DashboardService
         if ($to==='undefined') $to=null;
         $fromDate = $from ? Carbon::parse($from)->startOfDay() : null;
         $toDate = $to ? Carbon::parse($to)->endOfDay() : null;
-        $recentQuery = RentTransaction::with(['product','region','creator.region'])->orderBy('rent_date','desc');
-        $overdueQuery = RentTransaction::with(['product','region','creator.region'])->where('status','overdue')->orderBy('expected_return_date','asc');
+        $recentQuery = RentTransaction::with(['product','region','creator.region'])->orderBy('updated_at','desc');
+        $overdueQuery = RentTransaction::with(['product','region','creator.region'])->where('status','overdue')->orderBy('updated_at','desc');
         if ($fromDate) { $recentQuery->where('rent_date','>=',$fromDate); $overdueQuery->where('rent_date','>=',$fromDate); }
         if ($toDate) { $recentQuery->where('rent_date','<=',$toDate); $overdueQuery->where('rent_date','<=',$toDate); }
         if ($regionId) { $recentQuery->where('region_id',(int)$regionId); $overdueQuery->where('region_id',(int)$regionId); }

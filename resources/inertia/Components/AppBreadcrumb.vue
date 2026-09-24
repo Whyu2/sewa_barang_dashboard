@@ -4,17 +4,13 @@ import { Link } from '@inertiajs/vue3'
 import useAppBreadcrumbStore from "@/inertia/Stores/useAppBreadcrumbStore.js";
 import {storeToRefs} from "pinia";
 
-const home = {
-    icon: 'pi pi-home',
-    route: '/',
-}
 
 const store = useAppBreadcrumbStore();
 const { items } = storeToRefs(store);
 </script>
 
 <template>
-        <Breadcrumb :home="home" :model="items">
+        <Breadcrumb  :model="items">
             <template #item="{ item, props }">
                 <Link
                     v-if="item.route"

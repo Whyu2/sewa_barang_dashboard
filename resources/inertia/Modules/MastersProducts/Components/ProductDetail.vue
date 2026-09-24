@@ -29,8 +29,8 @@ const downloadImage = async () => {
     <Card class="p-6">
         <div class="rounded-xl border border-gray-300 overflow-hidden mb-4">
             <Image v-if="props.product.photo_url" :src="props.product.photo_url" preview class="w-full max-h-64 object-cover" />
-            <div v-else class="w-full h-32 bg-gray-50 flex items-center justify-center text-gray-400">- tidak ada foto -</div>
-            <div class="px-4 py-3 bg-gray-50">
+            <div v-else class="w-full h-32 bg-surface-0 dark:bg-surface-900 flex items-center justify-center">- tidak ada foto -</div>
+            <div class="px-4 py-3 bg-surface-0 dark:bg-surface-900">
                 <p class="font-semibold">{{ props.product.name }}</p>
                 <p class="text-xs text-gray-500">{{ props.product.category_name ?? '-' }}</p>
             </div>

@@ -9,7 +9,6 @@ import Button from 'primevue/button';
 import Ripple from 'primevue/ripple';
 import StyleClass from 'primevue/styleclass';
 import Avatar from 'primevue/avatar';
-import { Menubar } from "primevue";
 import './Assets/main.css';
 import { createPinia } from 'pinia';
 import { VueQueryPlugin } from '@tanstack/vue-query';
@@ -30,6 +29,10 @@ import Divider from 'primevue/divider';
 import FileUpload from 'primevue/fileupload';
 import Chart from 'primevue/chart';
 import DatePicker from 'primevue/datepicker';
+import useTheme from './Composables/useTheme.js';
+
+// Terapkan tema tersimpan (dark/light) sedini mungkin agar konsisten di semua halaman.
+useTheme().initTheme();
 
 
 
@@ -93,7 +96,6 @@ createInertiaApp({
         app.component('Drawer', Drawer);
         app.component('Button', Button);
         app.component('Avatar', Avatar);
-        app.component('Menubar', Menubar);
         app.component('Image', Image);
         app.component('Tag', Tag);
         app.component('Divider', Divider);

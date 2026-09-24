@@ -4,7 +4,7 @@ import { onMounted } from 'vue';
 import useAppBreadcrumbStore from '@/inertia/Stores/useAppBreadcrumbStore.js';
 import TransactionTable from '@/inertia/Modules/Transactions/Components/TransactionTable.vue';
 const store = useAppBreadcrumbStore();
-onMounted(() => store.setItem([{ label: 'Transaction' }, { label: 'List' }]));
+onMounted(() => store.setItem([{ label: 'Transactions' }]));
 </script>
 <template>
     <DashboardLayout use-breadcrumb>

@@ -1,0 +1,16 @@
+export const createProductQueryKey = () => ['createProduct'];
+export const deleteProductQueryKey = () => ['deleteProduct'];
+export const updateProductQueryKey = () => ['updateProduct'];
+export const createCategoryQueryKey = () => ['createCategory'];
+export const deleteCategoryQueryKey = () => ['deleteCategory'];
+export const updateCategoryQueryKey = () => ['updateCategory'];
+export const createRegionQueryKey = () => ['createRegion'];
+export const deleteRegionQueryKey = () => ['deleteRegion'];
+export const updateRegionQueryKey = () => ['updateRegion'];
+export const createUserQueryKey = () => ['createUser'];
+export const deleteUserQueryKey = () => ['deleteUser'];
+export const updateUserQueryKey = () => ['updateUser'];
+export const updateTransactionQueryKey = () => ['updateTransaction'];
+export const deleteTransactionQueryKey = () => ['deleteTransaction'];
+export const loginQueryKey = () => ['login'];
+export const logoutQueryKey = () => ['logout'];

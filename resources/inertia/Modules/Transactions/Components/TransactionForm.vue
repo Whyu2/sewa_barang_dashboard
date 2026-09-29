@@ -5,7 +5,6 @@ import { Form } from '@primevue/forms';
 import { yupResolver } from '@primevue/forms/resolvers/yup';
 import * as yup from 'yup';
 import useMutation from '@/inertia/Modules/Transactions/Composables/UseMutation.js';
-import useInvalidateQuery from '@/inertia/Modules/Transactions/Composables/UseInvalidateQuery.js';
 import { isLate } from '@/inertia/Utils/isOverdue.js';
 import { addDaysISO, diffDays } from '@/inertia/Utils/rentalDuration.js';
 import { parseApiError } from '@/inertia/Utils/parseApiError.js';
@@ -14,11 +13,9 @@ const props = defineProps({ transaction: { type: Object, required: true } });
 const toast = useToast();
 const dialogRef = inject('dialogRef');
 const { useUpdateTransaction } = useMutation();
-const { useInvalidateFetchTransactionsPaginated } = useInvalidateQuery();
 
 const { mutate: updateTx } = useUpdateTransaction({
-    onSuccess: async () => {
-        await useInvalidateFetchTransactionsPaginated();
+    onSuccess: () => {
         toast.add({ severity: 'success', summary: 'Data berhasil diperbarui', life: 2500 });
         dialogRef.value.close();
     },

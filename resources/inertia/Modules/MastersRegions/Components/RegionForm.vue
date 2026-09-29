@@ -5,7 +5,6 @@ import { Form } from '@primevue/forms';
 import { yupResolver } from '@primevue/forms/resolvers/yup';
 import * as yup from "yup";
 import useMutation from "@/inertia/Modules/MastersRegions/Composables/UseMutation.js";
-import useInvalidateQuery from "@/inertia/Modules/MastersRegions/Composables/UseInvalidateQuery.js";
 import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 
 const props = defineProps({
@@ -22,10 +21,8 @@ const toast = useToast();
 const dialogRef = inject('dialogRef');
 
 const {useCreateRegion, useUpdateRegion} = useMutation()
-const {useInvalidateFetchRegionPaginated} = useInvalidateQuery();
 const {mutate: createRegionMutation} = useCreateRegion({
-        onSuccess:async () => {
-            await useInvalidateFetchRegionPaginated();
+        onSuccess: () => {
             toast.add({ severity: 'success', summary: 'Data berhasil disimpan', life: 2500 });
             dialogRef.value.close();
         },
@@ -34,8 +31,7 @@ const {mutate: createRegionMutation} = useCreateRegion({
 )
 
 const {mutate: updateRegionMutation} = useUpdateRegion({
-        onSuccess:async () => {
-            await useInvalidateFetchRegionPaginated();
+        onSuccess: () => {
             toast.add({ severity: 'success', summary: 'Data berhasil diperbarui', life: 2500 });
             dialogRef.value.close();
         },

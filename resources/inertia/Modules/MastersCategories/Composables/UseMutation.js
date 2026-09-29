@@ -1,33 +1,51 @@
-import { useMutation as useMutationTanstack } from '@tanstack/vue-query';
+import { useMutation as useMutationTanstack, useQueryClient } from '@tanstack/vue-query';
 import {
     createCategory,
     deleteCategory,
     updateCategory
 } from "@/inertia/Modules/MastersCategories/Services/CategoryService.js";
 
+import { fetchCategoryPaginatedQueryKey } from "@/inertia/Constans/QueryKeys.js";
+import { createCategoryQueryKey, deleteCategoryQueryKey, updateCategoryQueryKey } from "@/inertia/Constans/MutationKeys.js";
+
 const useMutation = () => {
-  const useCreateCategory = ({ onSuccess, onError }) =>
-    useMutationTanstack({
-      mutationKey: ['createCategory'],
-      mutationFn: ({ payload }) => createCategory(payload),
-      onError: error => onError?.(error),
-      onSuccess: data => onSuccess(data),
+  const queryClient = useQueryClient();
+  const invalidateFetchCategoryPaginated = () =>
+    queryClient.invalidateQueries({
+      queryKey: fetchCategoryPaginatedQueryKey(),
     });
 
-    const useDeleteCategory = ({ onSuccess, onError }) =>
+  const useCreateCategory = ({ onSuccess, onError } = {}) =>
+    useMutationTanstack({
+      mutationKey: createCategoryQueryKey(),
+      mutationFn: ({ payload }) => createCategory(payload),
+      onError: error => onError?.(error),
+      onSuccess: async (data, variables, context) => {
+        await invalidateFetchCategoryPaginated();
+        onSuccess?.(data, variables, context);
+      },
+    });
+
+    const useDeleteCategory = ({ onSuccess, onError } = {}) =>
         useMutationTanstack({
-            mutationKey: ['deleteCategory'],
+            mutationKey: deleteCategoryQueryKey(),
             mutationFn: ({ id }) => deleteCategory(id),
             onError: error => onError?.(error),
-            onSuccess: data => onSuccess(data),
+            onSuccess: async (data, variables, context) => {
+              await invalidateFetchCategoryPaginated();
+              onSuccess?.(data, variables, context);
+            },
         });
 
-    const useUpdateCategory = ({ onSuccess, onError }) =>
+    const useUpdateCategory = ({ onSuccess, onError } = {}) =>
         useMutationTanstack({
-            mutationKey: ['updateCategory'],
+            mutationKey: updateCategoryQueryKey(),
             mutationFn: ({ id, payload }) => updateCategory( id, payload),
             onError: error => onError?.(error),
-            onSuccess: data => onSuccess(data),
+            onSuccess: async (data, variables, context) => {
+              await invalidateFetchCategoryPaginated();
+              onSuccess?.(data, variables, context);
+            },
         });
   return {
     useCreateCategory,

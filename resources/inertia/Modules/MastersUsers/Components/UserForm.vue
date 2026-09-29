@@ -5,7 +5,6 @@ import { Form } from '@primevue/forms';
 import { yupResolver } from '@primevue/forms/resolvers/yup';
 import * as yup from "yup";
 import useMutation from "@/inertia/Modules/MastersUsers/Composables/UseMutation.js";
-import useInvalidateQuery from "@/inertia/Modules/MastersUsers/Composables/UseInvalidateQuery.js";
 import useQueryRegions from "@/inertia/Modules/MastersRegions/Composables/UseQuery.js";
 import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 import { DEFAULT_USER_ROLE, USER_ROLE_OPTIONS, USER_ROLE_VALUES } from "@/inertia/Enums/UserRole.js";
@@ -24,7 +23,6 @@ const toast = useToast();
 const dialogRef = inject('dialogRef');
 
 const {useCreateUser, useUpdateUser} = useMutation()
-const {useInvalidateFetchUserPaginated} = useInvalidateQuery();
 const {useFetchRegionPaginated} = useQueryRegions();
 const {data: regionOpts} = useFetchRegionPaginated();
 
@@ -37,8 +35,7 @@ const showError = (error) => {
 const serverErrors = ref({});
 
 const {mutate: createUserMutation} = useCreateUser({
-        onSuccess:async () => {
-            await useInvalidateFetchUserPaginated();
+        onSuccess: () => {
             toast.add({ severity: 'success', summary: 'Data berhasil disimpan', life: 2500 });
             dialogRef.value.close();
         },
@@ -47,8 +44,7 @@ const {mutate: createUserMutation} = useCreateUser({
 )
 
 const {mutate: updateUserMutation} = useUpdateUser({
-        onSuccess:async () => {
-            await useInvalidateFetchUserPaginated();
+        onSuccess: () => {
             toast.add({ severity: 'success', summary: 'Data berhasil diperbarui', life: 2500 });
             dialogRef.value.close();
         },

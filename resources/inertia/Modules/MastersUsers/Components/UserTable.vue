@@ -6,7 +6,6 @@ import {baseDialog} from "@/inertia/Composables/BaseDialog.js";
 import { useToast } from "primevue/usetoast";
 import confirmDialog from "@/inertia/Composables/ConfirmDialog.js";
 import useMutation from "@/inertia/Modules/MastersUsers/Composables/UseMutation.js";
-import useInvalidateQuery from "@/inertia/Modules/MastersUsers/Composables/UseInvalidateQuery.js";
 import UserForm from "@/inertia/Modules/MastersUsers/Components/UserForm.vue";
 import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 import { USER_ROLES, USER_ROLE_OPTIONS } from "@/inertia/Enums/UserRole.js";
@@ -16,11 +15,9 @@ const roleLabel = (value) => USER_ROLE_OPTIONS.find((o) => o.value === value)?.l
 
 
 const {useDeleteUser} = useMutation();
-const {useInvalidateFetchUserPaginated} = useInvalidateQuery();
 const toast = useToast();
 const { mutate: deleteUser } = useDeleteUser({
-    onSuccess: async () => {
-        await useInvalidateFetchUserPaginated();
+    onSuccess: () => {
         toast.add({ severity: 'success', summary: 'Data berhasil dihapus', life: 2500 });    },
     onError: (error) => {
         const { message, detailText } = parseApiError(error, 'Gagal menghapus pengguna');

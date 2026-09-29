@@ -1,38 +1,55 @@
-import { useMutation as useMutationTanstack } from '@tanstack/vue-query';
+import { useMutation as useMutationTanstack, useQueryClient } from '@tanstack/vue-query';
 import {
-    createUser,
-    deleteUser,
-    updateUser
+  createUser,
+  deleteUser,
+  updateUser
 } from "@/inertia/Modules/MastersUsers/Services/UserService.js";
+import { fetchUserPaginatedQueryKey } from "@/inertia/Constans/QueryKeys.js";
+import { createUserQueryKey, deleteUserQueryKey, updateUserQueryKey } from "@/inertia/Constans/MutationKeys.js";
 
 const useMutation = () => {
-  const useCreateUser = ({ onSuccess, onError }) =>
-    useMutationTanstack({
-      mutationKey: ['createUser'],
-      mutationFn: ({ payload }) => createUser(payload),
-      onError: error => onError?.(error),
-      onSuccess: data => onSuccess?.(data),
+  const queryClient = useQueryClient();
+  const invalidateFetchUserPaginated = () =>
+    queryClient.invalidateQueries({
+      queryKey: fetchUserPaginatedQueryKey(),
     });
 
-    const useDeleteUser = ({ onSuccess, onError }) =>
-        useMutationTanstack({
-            mutationKey: ['deleteUser'],
-            mutationFn: ({ id }) => deleteUser(id),
-            onError: error => onError?.(error),
-            onSuccess: data => onSuccess?.(data),
-        });
+  const useCreateUser = ({ onSuccess, onError } = {}) =>
+    useMutationTanstack({
+      mutationKey: createUserQueryKey(),
+      mutationFn: ({ payload }) => createUser(payload),
+      onError: error => onError?.(error),
+      onSuccess: async (data, variables, context) => {
+        await invalidateFetchUserPaginated();
+        onSuccess?.(data, variables, context);
+      },
+    });
 
-    const useUpdateUser = ({ onSuccess, onError }) =>
-        useMutationTanstack({
-            mutationKey: ['updateUser'],
-            mutationFn: ({ id, payload }) => updateUser( id, payload),
-            onError: error => onError?.(error),
-            onSuccess: data => onSuccess?.(data),
-        });
+  const useDeleteUser = ({ onSuccess, onError } = {}) =>
+    useMutationTanstack({
+      mutationKey: deleteUserQueryKey(),
+      mutationFn: ({ id }) => deleteUser(id),
+      onError: error => onError?.(error),
+      onSuccess: async (data, variables, context) => {
+        await invalidateFetchUserPaginated();
+        onSuccess?.(data, variables, context);
+      },
+    });
+
+  const useUpdateUser = ({ onSuccess, onError } = {}) =>
+    useMutationTanstack({
+      mutationKey: updateUserQueryKey(),
+      mutationFn: ({ id, payload }) => updateUser(id, payload),
+      onError: error => onError?.(error),
+      onSuccess: async (data, variables, context) => {
+        await invalidateFetchUserPaginated();
+        onSuccess?.(data, variables, context);
+      },
+    });
   return {
     useCreateUser,
-      useDeleteUser,
-      useUpdateUser
+    useDeleteUser,
+    useUpdateUser
   };
 };
 export default useMutation;

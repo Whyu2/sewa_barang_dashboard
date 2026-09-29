@@ -7,16 +7,13 @@ import CategoryForm from "@/inertia/Modules/MastersCategories/Components/Categor
 import { useToast } from "primevue/usetoast";
 import confirmDialog from "@/inertia/Composables/ConfirmDialog.js";
 import useMutation from "@/inertia/Modules/MastersCategories/Composables/UseMutation.js";
-import useInvalidateQuery from "@/inertia/Modules/MastersCategories/Composables/UseInvalidateQuery.js";
 import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 
 
 const {useDeleteCategory} = useMutation();
-const {useInvalidateFetchCategoryPaginated} = useInvalidateQuery();
 const toast = useToast();
 const { mutate: deleteCategory } = useDeleteCategory({
-    onSuccess: async () => {
-        await useInvalidateFetchCategoryPaginated();
+    onSuccess: () => {
         toast.add({ severity: 'success', summary: 'Data berhasil dihapus', life: 2500 });    },
     onError: (error) => {
         const { message, detailText } = parseApiError(error, 'Gagal menghapus kategori');

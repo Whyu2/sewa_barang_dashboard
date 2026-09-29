@@ -6,17 +6,14 @@ import {baseDialog} from "@/inertia/Composables/BaseDialog.js";
 import { useToast } from "primevue/usetoast";
 import confirmDialog from "@/inertia/Composables/ConfirmDialog.js";
 import useMutation from "@/inertia/Modules/MastersRegions/Composables/UseMutation.js";
-import useInvalidateQuery from "@/inertia/Modules/MastersRegions/Composables/UseInvalidateQuery.js";
 import RegionForm from "@/inertia/Modules/MastersRegions/Components/RegionForm.vue";
 import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 
 
 const {useDeleteRegion} = useMutation();
-const {useInvalidateFetchRegionPaginated} = useInvalidateQuery();
 const toast = useToast();
 const { mutate: deleteRegion } = useDeleteRegion({
-    onSuccess: async () => {
-        await useInvalidateFetchRegionPaginated();
+    onSuccess: () => {
         toast.add({ severity: 'success', summary: 'Data berhasil dihapus', life: 2500 });    },
     onError: (error) => {
         const { message, detailText } = parseApiError(error, 'Gagal menghapus wilayah');

@@ -7,18 +7,14 @@ import { useToast } from "primevue/usetoast";
 import confirmDialog from "@/inertia/Composables/ConfirmDialog.js";
 import useMutation from "@/inertia/Modules/MastersProducts/Composables/UseMutation.js";
 import ProductForm from "@/inertia/Modules/MastersProducts/Components/ProductForm.vue";
-import useInvalidateQuery from "@/inertia/Modules/MastersProducts/Composables/UseInvalidateQuery.js";
 import ProductDetail from "@/inertia/Modules/MastersProducts/Components/ProductDetail.vue";
-import { formatIDR } from "@/inertia/Utils/formatIDR.js";
 import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 
 
 const {useDeleteProduct} = useMutation();
-const {useInvalidateFetchProductPaginated} = useInvalidateQuery();
 const toast = useToast();
 const { mutate: deleteProduct } = useDeleteProduct({
     onSuccess: async () => {
-        await useInvalidateFetchProductPaginated();
         toast.add({ severity: 'success', summary: 'Data berhasil dihapus', life: 2500 });    },
     onError: (error) => {
         const { message, detailText } = parseApiError(error, 'Gagal menghapus produk');

@@ -1,10 +1,11 @@
-import { useQuery as useQueryTanstack, useQueryClient } from '@tanstack/vue-query';
+import { useQuery as useQueryTanstack } from '@tanstack/vue-query';
 import {fetchCategoryPaginated} from "@/inertia/Modules/MastersCategories/Services/CategoryService.js";
+import { fetchCategoryPaginatedQueryKey } from "@/inertia/Constans/QueryKeys.js";
 
 const useQuery = () => {
   const useFetchCategoryPaginated = () =>
     useQueryTanstack({
-      queryKey: ['fetchCategoryPaginated'],
+      queryKey: fetchCategoryPaginatedQueryKey(),
       queryFn: () => fetchCategoryPaginated(),
       placeholderData: [],
     });

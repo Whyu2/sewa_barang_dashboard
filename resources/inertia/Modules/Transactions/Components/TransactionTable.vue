@@ -6,7 +6,6 @@ import useQuery from '@/inertia/Modules/Transactions/Composables/UseQuery.js';
 import { baseDialog } from '@/inertia/Composables/BaseDialog.js';
 import confirmDialog from '@/inertia/Composables/ConfirmDialog.js';
 import useMutation from '@/inertia/Modules/Transactions/Composables/UseMutation.js';
-import useInvalidateQuery from '@/inertia/Modules/Transactions/Composables/UseInvalidateQuery.js';
 import { useToast } from 'primevue/usetoast';
 import TransactionForm from '@/inertia/Modules/Transactions/Components/TransactionForm.vue';
 import TransactionDetail from '@/inertia/Modules/Transactions/Components/TransactionDetail.vue';
@@ -23,11 +22,9 @@ const { data: tx } = useFetchTransactionsPaginated();
 const { openBaseDialog } = baseDialog();
 const { baseConfirmDialog } = confirmDialog();
 const { useDeleteTransaction } = useMutation();
-const { useInvalidateFetchTransactionsPaginated } = useInvalidateQuery();
 
 const { mutate: delTx } = useDeleteTransaction({
-    onSuccess: async () => {
-        await useInvalidateFetchTransactionsPaginated();
+    onSuccess: () => {
         toast.add({ severity: 'success', summary: 'Data berhasil dihapus', life: 2500 });
     },
     onError: (e) => {

@@ -1,10 +1,11 @@
-import { useQuery as useQueryTanstack, useQueryClient } from '@tanstack/vue-query';
+import { useQuery as useQueryTanstack } from '@tanstack/vue-query';
 import {fetchRegionPaginated} from "@/inertia/Modules/MastersRegions/Services/RegionService.js";
+import { fetchRegionPaginatedQueryKey } from "@/inertia/Constans/QueryKeys.js";
 
 const useQuery = () => {
   const useFetchRegionPaginated = () =>
     useQueryTanstack({
-      queryKey: ['fetchRegionPaginated'],
+      queryKey: fetchRegionPaginatedQueryKey(),
       queryFn: () => fetchRegionPaginated(),
       placeholderData: [],
     });

@@ -1,0 +1,13 @@
+export const fetchProductPaginatedQueryKey = () => ['fetchProductPaginated'];
+export const fetchCategoriesQueryKey = () => ['fetchCategories'];
+export const fetchRegionsQueryKey = () => ['fetchRegions'];
+export const fetchCategoryPaginatedQueryKey = () => ['fetchCategoryPaginated'];
+export const fetchRegionPaginatedQueryKey = () => ['fetchRegionPaginated'];
+export const fetchUserPaginatedQueryKey = () => ['fetchUserPaginated'];
+export const fetchTransactionsPaginatedQueryKey = () => ['fetchTransactionsPaginated'];
+export const fetchProductsQueryKey = () => ['fetchProducts'];
+export const dashboardStatsQueryKey = (params) => ['dashboardStats', params];
+export const dashboardChartsQueryKey = (params) => ['dashboardCharts', params];
+export const dashboardTablesQueryKey = (params) => ['dashboardTables', params];
+export const logsPaginatedQueryKey = (params) => ['logsPaginated', params];
+export const fetchMeQueryKey = () => ['fetchMe'];

@@ -5,7 +5,6 @@ import { Form } from '@primevue/forms';
 import { yupResolver } from '@primevue/forms/resolvers/yup';
 import * as yup from "yup";
 import useMutation from "@/inertia/Modules/MastersCategories/Composables/UseMutation.js";
-import useInvalidateQuery from "@/inertia/Modules/MastersCategories/Composables/UseInvalidateQuery.js";
 import { parseApiError } from "@/inertia/Utils/parseApiError.js";
 
 const props = defineProps({
@@ -22,10 +21,8 @@ const toast = useToast();
 const dialogRef = inject('dialogRef');
 
 const {useCreateCategory, useUpdateCategory} = useMutation()
-const {useInvalidateFetchCategoryPaginated} = useInvalidateQuery();
 const {mutate: createCategoryMutation} = useCreateCategory({
-        onSuccess:async () => {
-            await useInvalidateFetchCategoryPaginated();
+        onSuccess: () => {
             toast.add({ severity: 'success', summary: 'Data berhasil disimpan', life: 2500 });
             dialogRef.value.close();
         },
@@ -34,8 +31,7 @@ const {mutate: createCategoryMutation} = useCreateCategory({
 )
 
 const {mutate: updateCategoryMutation} = useUpdateCategory({
-        onSuccess:async () => {
-            await useInvalidateFetchCategoryPaginated();
+        onSuccess: () => {
             toast.add({ severity: 'success', summary: 'Data berhasil diperbarui', life: 2500 });
             dialogRef.value.close();
         },

@@ -5,7 +5,6 @@ import { Form } from '@primevue/forms';
 import { yupResolver } from '@primevue/forms/resolvers/yup';
 import * as yup from "yup";
 import useMutation from "@/inertia/Modules/MastersProducts/Composables/UseMutation.js";
-import useInvalidateQuery from "@/inertia/Modules/MastersProducts/Composables/UseInvalidateQuery.js";
 import useQueryCategories from "@/inertia/Modules/MastersCategories/Composables/UseQuery.js";
 import useQueryRegions from "@/inertia/Modules/MastersRegions/Composables/UseQuery.js";
 import { parseApiError } from "@/inertia/Utils/parseApiError.js";
@@ -28,7 +27,6 @@ const { useFetchRegionPaginated } = useQueryRegions();
 const { data: categoryOpts } = useFetchCategoryPaginated();
 const { data: regionRaw } = useFetchRegionPaginated();
 const { useCreateProduct, useUpdateProduct } = useMutation();
-const { useInvalidateFetchProductPaginated } = useInvalidateQuery();
 
 var regionOpts = ref([
 ]);
@@ -75,7 +73,6 @@ const onclearCallback = () => {
 
 const { mutate: createProductMutation } = useCreateProduct({
     onSuccess: async () => {
-        await useInvalidateFetchProductPaginated();
         toast.add({ severity: 'success', summary: 'Data berhasil disimpan', life: 2500 });
         dialogRef.value.close();
     },
@@ -88,7 +85,6 @@ const { mutate: createProductMutation } = useCreateProduct({
 
 const { mutate: updateProductMutation } = useUpdateProduct({
     onSuccess: async () => {
-        await useInvalidateFetchProductPaginated();
         toast.add({ severity: 'success', summary: 'Data berhasil diperbarui', life: 2500 });
         dialogRef.value.close();
     },

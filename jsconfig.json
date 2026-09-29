@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es2015",
+        "paths": {
+            "@/*": [
+                "./"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "public",
+        "vendor"
+    ]
+}

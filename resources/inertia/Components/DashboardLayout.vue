@@ -136,6 +136,7 @@ const currentYear = new Date().getFullYear();
             <p class="text-sm text-gray-500">Memverifikasi sesi...</p>
         </div>
         <template v-else>
+            <div class="min-h-screen flex flex-col">
             <!-- Topbar -->
             <div class="flex items-center gap-2 px-4 py-2 sticky top-0 z-40 border-b border-surface-200 dark:border-surface-800 bg-surface-0 dark:bg-surface-900">
                 <Button
@@ -145,6 +146,7 @@ const currentYear = new Date().getFullYear();
                     aria-label="Buka menu navigasi"
                     @click="visible = true"
                 />
+                <span class="font-semibold text-surface-800 dark:text-surface-100">Sewa Barang</span>
                 <span class="flex-1"></span>
                     <Button
                         :icon="isDark ? 'pi pi-sun' : 'pi pi-moon'"
@@ -156,15 +158,19 @@ const currentYear = new Date().getFullYear();
                     <Button
                         icon="pi pi-sign-out"
                         text
-                        severity="success"
+                        severity="danger"
                         rounded
                         aria-label="Keluar"
+                        v-tooltip.bottom="'Keluar'"
                         @click="confirmLogout"
                     />
             </div>
 
             <!-- Drawer navigasi (overlay) -->
             <Drawer v-model:visible="visible">
+                <template #header>
+                    <span class="font-semibold text-surface-800 dark:text-surface-100">Sewa Barang</span>
+                </template>
                 <nav class="flex flex-col gap-1">
                     <template v-for="item in items" :key="item.label">
                         <!-- Item dengan route langsung -->
@@ -228,17 +234,18 @@ const currentYear = new Date().getFullYear();
                 </template>
             </Drawer>
 
-            <AppBreadcrumb v-if="props.useBreadcrumb" />
+            <div class="flex-1 w-full max-w-[1400px] mx-auto px-4 py-4">
+                <AppBreadcrumb v-if="props.useBreadcrumb" />
 
-            <div class="pl-4 pr-4 pt-4 pb-4 min-h-[calc(100vh-220px)]">
                 <slot />
             </div>
 
-            <footer class="mt-4 px-4 py-3 border-t border-surface-200 dark:border-surface-800 bg-surface-0 dark:bg-surface-900">
+            <footer class="px-4 py-3 border-t border-surface-200 dark:border-surface-800 bg-surface-0 dark:bg-surface-900">
                 <p class="m-0 text-center text-sm text-surface-500 dark:text-surface-400">
-                    © {{ currentYear }}.
+                    © {{ currentYear }} Sewa Barang Dashboard
                 </p>
             </footer>
+            </div>
         </template>
     </inertiaApp>
 </template>

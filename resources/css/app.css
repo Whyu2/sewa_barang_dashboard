@@ -1,1 +1,12 @@
 
+/* Tabel ramping: cegah wrap agar baris tidak gemuk ke bawah, scroll horizontal di wrapper */
+.p-datatable-thead > tr > th,
+.p-datatable-tbody > tr > td {
+    white-space: nowrap;
+}
+/* Kolom deskripsi boleh wrap agar tetap rapi */
+.col-wrap {
+    white-space: normal !important;
+    min-width: 16rem;
+    max-width: 24rem;
+}

@@ -9,8 +9,8 @@ export function baseDialog() {
     component,
     componentProps = {},
     titleHeader,
-    position = 'top',
-    width = `50vh`,
+    position = 'center',
+    width = '640px',
     onClose = () => {},
     onSubmit = () => {},
     onCancel = () => {},
@@ -29,7 +29,9 @@ export function baseDialog() {
         closable: true,
         header: titleHeader ?? ' ',
         position: position,
-        style: { width: width },
+        breakpoints: { '960px': '90vw' },
+        style: { width: width, maxWidth: '720px', borderRadius: '24px', border: 'none', overflow: 'hidden' },
+        pt: { header: { style: { padding: '20px 24px 12px 24px', border: 'none' } }, content: { style: { padding: '0 24px 24px 24px' } } },
       },
       onClose: ({ data }) => {
         if (typeof data?.action === 'undefined') {

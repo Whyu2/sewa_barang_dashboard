@@ -31,7 +31,7 @@ const handleOpenDialogAdd = () => {
         {
             titleHeader: 'Tambah Produk Baru',
         component: ProductForm,
-        width: `50vw`,
+        width: '640px',
         componentProps: {
             isUpdate: false,
         },
@@ -43,7 +43,7 @@ const handleOpenDialogUpdate = (product) => {
         {
             titleHeader: 'Ubah Produk',
             component: ProductForm,
-            width: `50vw`,
+            width: '640px',
             componentProps: {
                 product: product,
                 isUpdate: true,
@@ -56,7 +56,7 @@ const handleOpenDialogDetail = (product) => {
         {
             titleHeader: 'Detail Produk',
             component: ProductDetail,
-            width: `70vw`,
+            width: '720px',
             componentProps: {
                 product: product,
             },
@@ -76,16 +76,17 @@ const confirmDelete = (id) => {
 </script>
 
 <template>
-    <div class="card">
+    <div class="card max-w-full overflow-hidden">
         <div class="flex justify-end mb-4 ">
          <Button label="Tambah Data" @click="handleOpenDialogAdd" icon="pi pi-plus"/>
         </div>
-        <DataTable v-if="product" :value="product.data" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="min-width: 50rem" show-gridlines>
-            <Column field="name" header="Nama" style="width: 25%"></Column>
-            <Column field="category_name" header="Kategori" style="width: 20%"></Column>
-            <Column header="Stok per Wilayah" style="width: 30%">
+        <div class="overflow-x-auto max-w-full">
+        <DataTable v-if="product" :value="product.data" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" scrollable tableStyle="min-width: 50rem" show-gridlines>
+            <Column field="name" header="Nama" style="min-width:12rem"></Column>
+            <Column field="category_name" header="Kategori" style="min-width:10rem"></Column>
+            <Column header="Stok per Wilayah" style="min-width:16rem">
                 <template #body="slotProps">
-                    <div v-if="slotProps.data.product_region?.length" class="flex flex-col gap-1">
+                    <div v-if="slotProps.data.product_region?.length" class="flex flex-col gap-1 whitespace-nowrap">
                         <span v-for="region in slotProps.data.product_region" :key="region.region_id" class="text-xs border border-gray-300 rounded px-2 py-1 flex justify-between gap-2">
                             <span>{{ region.region_name }}</span><span class="font-medium">{{ region.qty }}</span>
                         </span>
@@ -93,7 +94,7 @@ const confirmDelete = (id) => {
                     <span v-else class="text-gray-400 text-xs">-</span>
                 </template>
             </Column>
-            <Column field="action" header="Aksi">
+            <Column field="action" header="Aksi" frozen alignFrozen="right" style="min-width:8rem">
                 <template #body="slotProps">
                     <Button icon="pi pi-pencil" rounded text size="small" @click="handleOpenDialogUpdate(slotProps.data)"/>
                     <Button icon="pi pi-trash" rounded text size="small" @click="confirmDelete(slotProps.data.id)" />
@@ -101,6 +102,7 @@ const confirmDelete = (id) => {
                 </template>
             </Column>
         </DataTable>
+        </div>
     </div>
 </template>
 

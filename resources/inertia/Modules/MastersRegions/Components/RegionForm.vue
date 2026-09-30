@@ -93,11 +93,12 @@ watch(
 </script>
 
 <template>
-    <div class="card">
+    <div class="flex flex-col gap-4">
         <Form v-slot="$form" :initialValues="initialValues" :resolver="resolver" @submit="onFormSubmit">
-            <div class="mb-2">
-                <label for="name">Nama</label>
-                    <InputText name="name" placeholder="cth: Jakarta Timur"     class="w-full" />
+            <div class="rounded-2xl border border-surface-200 dark:border-surface-700 p-4 flex flex-col gap-3">
+            <div>
+                <label class="text-xs text-surface-500">Nama</label>
+                    <InputText name="name" placeholder="cth: Jakarta Timur" class="w-full mt-1" />
                     <Message
                         v-if="$form.name?.invalid"
                         severity="error"
@@ -116,9 +117,9 @@ watch(
                     </Message>
             </div>
 
-            <div class="mb-2">
-                <label for="description">Deskripsi</label>
-                <InputText name="description" placeholder="cth: Gudang utama" class="w-full" />
+            <div>
+                <label class="text-xs text-surface-500">Deskripsi</label>
+                <InputText name="description" placeholder="cth: Gudang utama" class="w-full mt-1" />
                 <Message
                     v-if="$form.description?.invalid"
                     severity="error"
@@ -136,8 +137,10 @@ watch(
                         {{ serverErrors.description }}
                     </Message>
             </div>
-            <div class="flex justify-end">
-                <Button type="submit" :label="`${props?.isUpdate ? 'Perbarui' : 'Simpan' }`" icon="pi pi-check" class="mt-4" />
+            </div>
+            <div class="flex justify-end gap-2">
+                <Button label="Batal" severity="secondary" outlined @click="dialogRef.close({ action: 'cancel' })" />
+                <Button type="submit" :label="`${props?.isUpdate ? 'Perbarui' : 'Simpan' }`" icon="pi pi-check" />
             </div>
         </Form>
     </div>

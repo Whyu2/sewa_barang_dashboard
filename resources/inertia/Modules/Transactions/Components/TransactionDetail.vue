@@ -7,92 +7,78 @@ import { formatDurationDays } from '@/inertia/Utils/rentalDuration.js';
 const props = defineProps({ transaction: { type: Object, required: true } });
 </script>
 <template>
-    <div class="flex flex-col gap-4 text-sm">
-        <div class="rounded-xl border border-gray-300 overflow-hidden">
-            <img v-if="transaction.product?.photo_url" :src="transaction.product.photo_url" alt="Foto Barang" class="w-full max-h-64 object-cover border-b border-gray-300" />
-            <div v-else class="w-full h-32 bg-gray-50 flex items-center justify-center text-gray-400">- tidak ada foto -</div>
-            <div class="px-4 py-2 bg-gray-50 flex justify-between text-xs">
-                <span class="font-medium">{{ transaction.product?.name ?? '-' }}</span>
-                <span class="text-gray-500">{{ transaction.product?.category_name ?? '-' }}</span>
+    <div class="flex flex-col gap-4">
+        <!-- Header ala referensi -->
+        <div class="flex items-start gap-4">
+            <div class="w-16 h-16 shrink-0 rounded-2xl overflow-hidden border border-surface-200 dark:border-surface-700 bg-surface-100 dark:bg-surface-800 flex items-center justify-center">
+                <img v-if="transaction.product?.photo_url" :src="transaction.product.photo_url" alt="Foto Barang" class="w-16 h-16 object-cover" />
+                <i v-else class="pi pi-box text-2xl text-surface-400"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-lg font-semibold text-surface-900 dark:text-surface-0 truncate">{{ transaction.product?.name ?? '-' }}</p>
+                <p class="text-xs text-surface-500 font-mono">{{ formatTRX(transaction.id) }} &middot; {{ transaction.region?.name ?? '-' }}</p>
+                <div class="mt-1"><Tag :value="getStatusLabel(transaction.status)" :severity="getStatusSeverity(transaction.status)" /></div>
             </div>
         </div>
 
-        <div class="rounded-lg border border-gray-300 divide-y divide-gray-300">
-            <div class="p-3">
-                <p class="text-xs text-gray-500 uppercase tracking-wide">ID Transaksi</p>
-                <p class="font-mono text-xs font-medium mt-1">{{ formatTRX(transaction.id) }}</p>
-            </div>
-            <div class="grid grid-cols-2 divide-x divide-gray-300">
-                <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Penyewa</p>
-                    <p class="font-medium mt-1">{{ transaction.renter_name }}</p>
+        <!-- Frame isi -->
+        <div class="rounded-2xl border border-surface-200 dark:border-surface-700 p-4 flex flex-col gap-4 text-sm">
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <p class="text-xs text-surface-500">Penyewa</p>
+                    <p class="font-medium mt-0.5">{{ transaction.renter_name }}</p>
                 </div>
-                <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">No. HP</p>
-                    <p class="font-medium mt-1">{{ transaction.renter_phone }}</p>
+                <div>
+                    <p class="text-xs text-surface-500">No. HP</p>
+                    <p class="font-medium mt-0.5">{{ transaction.renter_phone }}</p>
                 </div>
             </div>
-            <div class="grid grid-cols-2 divide-x divide-gray-300">
-                <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Wilayah</p>
-                    <p class="font-medium mt-1">{{ transaction.region?.name ?? '-' }}</p>
+            <div class="grid grid-cols-3 gap-3">
+                <div>
+                    <p class="text-xs text-surface-500">Jumlah</p>
+                    <p class="font-medium mt-0.5">{{ transaction.qty }}</p>
                 </div>
-                <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Jumlah</p>
-                    <p class="font-medium mt-1">{{ transaction.qty }}</p>
-                </div>
-            </div>
-            <div class="p-3">
-                <p class="text-xs text-gray-500 uppercase tracking-wide">Harga</p>
-                <p class="font-medium mt-1">{{ formatIDR(transaction.rent_price) }}</p>
-            </div>
-            <div class="grid grid-cols-2 divide-x divide-gray-300">
-                <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Tanggal Sewa</p>
-                    <p class="font-medium mt-1">{{ formatDateID(transaction.rent_date) }}</p>
-                </div>
-                <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Tanggal Kembali (Rencana)</p>
-                    <p class="font-medium mt-1">{{ formatDateID(transaction.expected_return_date) }}</p>
-                    <p class="text-xs text-gray-500 mt-1">Lama sewa: {{ formatDurationDays(transaction.rent_date, transaction.expected_return_date) }}</p>
+                <div class="col-span-2">
+                    <p class="text-xs text-surface-500">Harga</p>
+                    <p class="font-medium mt-0.5">{{ formatIDR(transaction.rent_price) }}</p>
                 </div>
             </div>
-            <div class="grid grid-cols-2 divide-x divide-gray-300">
-                <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Tanggal Kembali (Aktual)</p>
-                    <p class="font-medium mt-1">{{ formatDateID(transaction.return_date) }}</p>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <p class="text-xs text-surface-500">Tanggal Sewa</p>
+                    <p class="font-medium mt-0.5">{{ formatDateID(transaction.rent_date) }}</p>
                 </div>
-                <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Status</p>
-                    <div class="mt-1"><Tag :value="getStatusLabel(transaction.status)" :severity="getStatusSeverity(transaction.status)" /></div>
-                </div>
-            </div>
-            <div class="p-3">
-                <p class="text-xs text-gray-500 uppercase tracking-wide">Catatan</p>
-                <p class="font-medium mt-1 whitespace-pre-wrap break-words">{{ transaction.notes ?? '-' }}</p>
-            </div>
-            <div class="grid grid-cols-2 divide-x divide-gray-300">
-                <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Dibuat Oleh</p>
-                    <p class="font-medium mt-1">{{ transaction.creator?.name ?? '-' }}</p>
-                </div>
-                <div class="p-3">
-                    <p class="text-xs text-gray-500 uppercase tracking-wide">Wilayah Pembuat</p>
-                    <p class="font-medium mt-1">{{ transaction.creator?.region?.name ?? transaction.region?.name ?? '-' }}</p>
+                <div>
+                    <p class="text-xs text-surface-500">Kembali (Rencana)</p>
+                    <p class="font-medium mt-0.5">{{ formatDateID(transaction.expected_return_date) }}</p>
+                    <p class="text-xs text-surface-500 mt-0.5">{{ formatDurationDays(transaction.rent_date, transaction.expected_return_date) }}</p>
                 </div>
             </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div class="rounded-lg border border-gray-300 p-3">
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Bukti Pengambilan</p>
-                <Image v-if="transaction.pickup_proof_url" :src="transaction.pickup_proof_url" alt="Bukti pengambilan" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
-                <span v-else class="text-gray-400 text-xs">- tidak ada -</span>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <p class="text-xs text-surface-500">Kembali (Aktual)</p>
+                    <p class="font-medium mt-0.5">{{ formatDateID(transaction.return_date) }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-surface-500">Dibuat Oleh</p>
+                    <p class="font-medium mt-0.5">{{ transaction.creator?.name ?? '-' }}</p>
+                </div>
             </div>
-            <div class="rounded-lg border border-gray-300 p-3">
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Bukti Pengembalian</p>
-                <Image v-if="transaction.return_proof_url" :src="transaction.return_proof_url" alt="Bukti pengembalian" preview imageClass="w-24 h-24 object-cover rounded-lg border border-gray-300" />
-                <span v-else class="text-gray-400 text-xs">- tidak ada -</span>
+            <div>
+                <p class="text-xs text-surface-500">Catatan</p>
+                <p class="font-medium mt-0.5 whitespace-pre-wrap break-words">{{ transaction.notes ?? '-' }}</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="rounded-xl border border-surface-200 dark:border-surface-700 p-3">
+                    <p class="text-xs text-surface-500 mb-2">Bukti Pengambilan</p>
+                    <Image v-if="transaction.pickup_proof_url" :src="transaction.pickup_proof_url" alt="Bukti pengambilan" preview imageClass="w-full aspect-square object-cover rounded-lg border border-surface-200 dark:border-surface-700" />
+                    <span v-else class="text-surface-400 text-xs">Tidak ada</span>
+                </div>
+                <div class="rounded-xl border border-surface-200 dark:border-surface-700 p-3">
+                    <p class="text-xs text-surface-500 mb-2">Bukti Pengembalian</p>
+                    <Image v-if="transaction.return_proof_url" :src="transaction.return_proof_url" alt="Bukti pengembalian" preview imageClass="w-full aspect-square object-cover rounded-lg border border-surface-200 dark:border-surface-700" />
+                    <span v-else class="text-surface-400 text-xs">Tidak ada</span>
+                </div>
             </div>
         </div>
     </div>

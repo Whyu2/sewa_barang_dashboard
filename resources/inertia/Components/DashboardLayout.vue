@@ -234,7 +234,7 @@ const currentYear = new Date().getFullYear();
                 </template>
             </Drawer>
 
-            <div class="flex-1 w-full max-w-[1400px] mx-auto px-4 py-4">
+            <div class="flex-1 w-full max-w-[1400px] mx-auto px-4 py-4 min-w-0 overflow-x-clip">
                 <AppBreadcrumb v-if="props.useBreadcrumb" />
 
                 <slot />

@@ -166,17 +166,18 @@ watch(
 </script>
 
 <template>
-    <div class="card">
+    <div class="flex flex-col gap-4">
         <Form v-slot="$form" :initialValues="initialValues" :resolver="resolver" @submit="onFormSubmit">
-            <div class="mb-2">
-                <label for="name">Nama</label>
-                <InputText name="name" placeholder="cth: Tenda Dome 4 Orang" class="w-full" />
+        <div class="rounded-2xl border border-surface-200 dark:border-surface-700 p-4 flex flex-col gap-3">
+            <div>
+                <label class="text-xs text-surface-500">Nama</label>
+                <InputText name="name" placeholder="cth: Tenda Dome 4 Orang" class="w-full mt-1" />
                 <Message v-if="$form.name?.invalid" severity="error" variant="simple" size="small">
                     {{ $form.name.error?.message }}
                 </Message>
             </div>
-            <div class="mb-2">
-                <label for="category">Kategori</label>
+            <div>
+                <label class="text-xs text-surface-500">Kategori</label>
                 <Dropdown name="category_id" :options="categoryOpts.data || []" optionLabel="name" optionValue="id"
                     placeholder="Pilih Kategori" checkmark :highlightOnSelect="false" class="w-full md:w-14rem" />
                 <Message v-if="$form.category_id?.invalid" severity="error" size="small" variant="simple">
@@ -186,15 +187,15 @@ watch(
 
 
 
-            <div class="mb-2">
-                <label for="description">Deskripsi</label>
-                <InputText name="description" placeholder="cth: Kapasitas 4 orang, waterproof" class="w-full" />
+            <div>
+                <label class="text-xs text-surface-500">Deskripsi</label>
+                <InputText name="description" placeholder="cth: Kapasitas 4 orang, waterproof" class="w-full mt-1" />
                 <Message v-if="$form.description?.invalid" severity="error" size="small" variant="simple">
                     {{ $form.description.error?.message }}
                 </Message>
             </div>
-            <div class="mb-2">
-                <label for="product_region_id" class="block mb-1">
+            <div>
+                <label class="text-xs text-surface-500 block mb-1">
                     Stok per Wilayah
                 </label>
                 <CheckboxGroup name="product_region_id" class="flex flex-col gap-1">
@@ -212,7 +213,7 @@ watch(
 
 
             </div>
-            <label for="product_region_id" class="block mb-1">
+            <label class="text-xs text-surface-500 block mb-1">
                 Foto Produk
             </label>
             <div class="card flex flex-col gap-2">
@@ -225,9 +226,10 @@ watch(
                 <FileUpload mode="basic" @select="onFileSelect" customUpload auto severity="secondary" accept="image/*"
                     class="p-button-outlined" chooseLabel="Pilih Foto" />
             </div>
-            <div class="flex justify-end">
-                <Button type="submit" :label="`${props?.isUpdate ? 'Perbarui' : 'Simpan'}`" icon="pi pi-check"
-                    class="mt-4" />
+            </div>
+            <div class="flex justify-end gap-2 mt-4">
+                <Button label="Batal" severity="secondary" outlined @click="dialogRef.close({ action: 'cancel' })" />
+                <Button type="submit" :label="`${props?.isUpdate ? 'Perbarui' : 'Simpan'}`" icon="pi pi-check" />
             </div>
         </Form>
     </div>

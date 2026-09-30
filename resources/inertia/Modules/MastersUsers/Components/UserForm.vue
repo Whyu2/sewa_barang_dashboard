@@ -124,11 +124,12 @@ watch(
 </script>
 
 <template>
-    <div class="card">
+    <div class="flex flex-col gap-4">
         <Form v-slot="$form" :initialValues="initialValues" :resolver="resolver" @submit="onFormSubmit">
-            <div class="mb-2">
-                <label for="name">Nama</label>
-                    <InputText name="name" placeholder="cth: Budi Santoso" class="w-full" />
+            <div class="rounded-2xl border border-surface-200 dark:border-surface-700 p-4 flex flex-col gap-3">
+            <div>
+                <label class="text-xs text-surface-500">Nama</label>
+                    <InputText name="name" placeholder="cth: Budi Santoso" class="w-full mt-1" />
                     <Message
                         v-if="$form.name?.invalid"
                         severity="error"
@@ -147,9 +148,9 @@ watch(
                     </Message>
             </div>
 
-            <div class="mb-2">
-                <label for="email">Email</label>
-                <InputText name="email" type="email" placeholder="cth: budi@example.com" class="w-full" />
+            <div>
+                <label class="text-xs text-surface-500">Email</label>
+                <InputText name="email" type="email" placeholder="cth: budi@example.com" class="w-full mt-1" />
                 <Message
                     v-if="$form.email?.invalid"
                     severity="error"
@@ -168,8 +169,8 @@ watch(
                     </Message>
             </div>
 
-            <div class="mb-2">
-                <label for="password" class="block mb-1">Kata Sandi {{ props?.isUpdate ? '(kosongkan jika tidak diubah)' : '' }}</label>
+            <div>
+                <label class="text-xs text-surface-500 block mb-1">Kata Sandi {{ props?.isUpdate ? '(kosongkan jika tidak diubah)' : '' }}</label>
                 <Password name="password" placeholder="Minimal 6 karakter" class="w-full" inputClass="w-full" toggleMask :feedback="false" />
                 <Message
                     v-if="$form.password?.invalid"
@@ -189,8 +190,8 @@ watch(
                     </Message>
             </div>
 
-            <div class="mb-2">
-                <label for="role">Peran</label>
+            <div>
+                <label class="text-xs text-surface-500">Peran</label>
                 <Dropdown name="role" :options="roleOpts" optionLabel="label" optionValue="value"
                     placeholder="Pilih Peran" checkmark :highlightOnSelect="false" class="w-full" disabled />
                 <Message
@@ -211,8 +212,8 @@ watch(
                     </Message>
             </div>
 
-            <div class="mb-2">
-                <label for="region_id">Wilayah</label>
+            <div>
+                <label class="text-xs text-surface-500">Wilayah</label>
                 <Dropdown name="region_id" :options="regionOpts?.data || []" optionLabel="name" optionValue="id"
                     placeholder="Pilih Wilayah" checkmark :highlightOnSelect="false" class="w-full" />
                 <Message
@@ -232,8 +233,10 @@ watch(
                         {{ serverErrors.region_id }}
                     </Message>
             </div>
-            <div class="flex justify-end">
-                <Button type="submit" :label="`${props?.isUpdate ? 'Perbarui' : 'Simpan' }`" icon="pi pi-check" class="mt-4" />
+            </div>
+            <div class="flex justify-end gap-2">
+                <Button label="Batal" severity="secondary" outlined @click="dialogRef.close({ action: 'cancel' })" />
+                <Button type="submit" :label="`${props?.isUpdate ? 'Perbarui' : 'Simpan' }`" icon="pi pi-check" />
             </div>
         </Form>
     </div>

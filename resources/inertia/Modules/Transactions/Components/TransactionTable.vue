@@ -33,42 +33,43 @@ const { mutate: delTx } = useDeleteTransaction({
     },
 });
 
-const openDetail = (row) => openBaseDialog({ titleHeader: 'Detail Transaksi', component: TransactionDetail, width: '60vw', componentProps: { transaction: row } });
-const openEdit = (row) => openBaseDialog({ titleHeader: 'Ubah Transaksi', component: TransactionForm, width: '50vw', componentProps: { transaction: row } });
+const openDetail = (row) => openBaseDialog({ titleHeader: 'Detail Transaksi', component: TransactionDetail, width: '680px', componentProps: { transaction: row } });
+const openEdit = (row) => openBaseDialog({ titleHeader: 'Ubah Transaksi', component: TransactionForm, width: '640px', componentProps: { transaction: row } });
 const confirmDelete = (id) => baseConfirmDialog({ message: 'Hapus data ini? Tindakan ini tidak dapat dibatalkan.', header: 'Konfirmasi Hapus', acceptLabel: 'Hapus', onAccept: () => delTx({ id }) });
 
 </script>
 <template>
-    <div class="card">
-        <DataTable v-if="tx" :value="tx.data" paginator :rows="10" :rowsPerPageOptions="[10,20,50]" tableStyle="min-width: 70rem" showGridlines>
-            <Column header="ID Transaksi" style="width:6rem"><template #body="{data}"><span class="font-mono text-xs">{{ formatTRX(data.id) }}</span></template></Column>
-            <Column header="Produk">
-                <template #body="{ data }">{{ data.product?.name ?? '-' }}</template>
+    <div class="card max-w-full overflow-hidden">
+        <div class="overflow-x-auto max-w-full">
+        <DataTable v-if="tx" :value="tx.data" paginator :rows="10" :rowsPerPageOptions="[10,20,50]" scrollable tableStyle="min-width: 90rem" showGridlines>
+            <Column header="ID Transaksi" style="min-width:7rem"><template #body="{data}"><span class="font-mono text-xs whitespace-nowrap">{{ formatTRX(data.id) }}</span></template></Column>
+            <Column header="Produk" style="min-width:12rem">
+                <template #body="{ data }"><span class="whitespace-nowrap">{{ data.product?.name ?? '-' }}</span></template>
             </Column>
-            <Column header="Wilayah">
-                <template #body="{ data }">{{ data.region?.name ?? '-' }}</template>
+            <Column header="Wilayah" style="min-width:8rem">
+                <template #body="{ data }"><span class="whitespace-nowrap">{{ data.region?.name ?? '-' }}</span></template>
             </Column>
-            <Column field="renter_name" header="Penyewa" />
-            <Column field="qty" header="Jml" style="width:5rem" />
-            <Column header="Harga">
-                <template #body="{ data }">{{ formatIDR(data.rent_price) }}</template>
+            <Column field="renter_name" header="Penyewa" style="min-width:9rem" />
+            <Column field="qty" header="Jml" style="min-width:4rem" />
+            <Column header="Harga" style="min-width:9rem">
+                <template #body="{ data }"><span class="whitespace-nowrap">{{ formatIDR(data.rent_price) }}</span></template>
             </Column>
-            <Column header="Tanggal Sewa">
-                <template #body="{ data }">{{ formatDateID(data.rent_date) }}</template>
+            <Column header="Tanggal Sewa" style="min-width:10rem">
+                <template #body="{ data }"><span class="whitespace-nowrap">{{ formatDateID(data.rent_date) }}</span></template>
             </Column>
-            <Column header="Perkiraan Kembali">
-                <template #body="{ data }">{{ formatDateID(data.expected_return_date) }}</template>
+            <Column header="Perkiraan Kembali" style="min-width:10rem">
+                <template #body="{ data }"><span class="whitespace-nowrap">{{ formatDateID(data.expected_return_date) }}</span></template>
             </Column>
-            <Column header="Lama Sewa" style="width:7rem">
-                <template #body="{ data }">{{ formatDurationDays(data.rent_date, data.expected_return_date) }}</template>
+            <Column header="Lama Sewa" style="min-width:6rem">
+                <template #body="{ data }"><span class="whitespace-nowrap">{{ formatDurationDays(data.rent_date, data.expected_return_date) }}</span></template>
             </Column>
-            <Column header="Tanggal Kembali">
-                <template #body="{ data }">{{ formatDateID(data.return_date) }}</template>
+            <Column header="Tanggal Kembali" style="min-width:10rem">
+                <template #body="{ data }"><span class="whitespace-nowrap">{{ formatDateID(data.return_date) }}</span></template>
             </Column>
-            <Column header="Status">
+            <Column header="Status" style="min-width:9rem">
                 <template #body="{ data }"><Tag :value="getStatusLabel(data.status)" :severity="getStatusSeverity(data.status)" /></template>
             </Column>
-            <Column header="Aksi" style="width:10rem">
+            <Column header="Aksi" frozen alignFrozen="right" style="min-width:9rem">
                 <template #body="{ data }">
                     <Button icon="pi pi-eye" rounded text size="small" @click="openDetail(data)" />
                     <Button icon="pi pi-pencil" rounded text size="small" @click="openEdit(data)" />
@@ -76,5 +77,6 @@ const confirmDelete = (id) => baseConfirmDialog({ message: 'Hapus data ini? Tind
                 </template>
             </Column>
         </DataTable>
+        </div>
     </div>
 </template>

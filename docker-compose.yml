@@ -7,7 +7,10 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "8000:80"
+      # Jangan pakai 8000 di VPS ini — sudah dipakai Coolify (login page).
+      # Pakai 8080 agar bisa diakses via http://45.66.153.148:8080/
+      # Bisa dioverride via env: APP_PORT=8081 docker compose up -d
+      - "${APP_PORT:-8080}:80"
     env_file:
       - .env
     volumes:
@@ -26,7 +29,9 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      # Jangan expose 5432 ke host di VPS kalau tidak perlu (bentrok / risiko keamanan).
+      # Hanya expose kalau butuh debug: DB_PORT=5433 docker compose up -d
+      - "127.0.0.1:${DB_PORT:-5433}:5432"
 
 volumes:
   db_data:
